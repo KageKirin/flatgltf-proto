@@ -1,1 +1,4 @@
 
+table glTF {
+	foobar: int;
+}

@@ -161,10 +161,6 @@ table Accessor
 /// Metadata about the glTF asset.
 table Asset 
 {
-	/// The user-defined name of this object.
-	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
-	name: string;
-
 	/// A copyright message suitable for display to credit the content creator.
 	copyright: string;
 	
@@ -179,6 +175,11 @@ table Asset
 	/// pattern": "^[0-9]+\\.[0-9]+$
 	minVersion: string;
 
+	///-- glTFChildOfRootProperty
+	/// The user-defined name of this object.
+	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+	name: string;
+
 	///-- glTFProperty
 	/// Dictionary object with extension-specific objects.
 	extensions: [ubyte](flexbuffer);
@@ -186,6 +187,7 @@ table Asset
 	/// Application-specific data.
 	extras: [ubyte](flexbuffer);
 	///-- glTFProperty --/
+	///-- glTFChildOfRootProperty --/
 }
 ///-- asset.schema.json --/
 

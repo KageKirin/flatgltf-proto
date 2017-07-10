@@ -2,6 +2,7 @@
 #define FLATGLTF_2_0_API_H_INC
 
 #include "glTF_generated.h"
+#include "glTF_types.h"
 #include "glb.h"
 
 #include <cctype>
@@ -12,12 +13,6 @@
 
 namespace glTF_2_0
 {
-	// TODO: doc
-	struct glTFDataT
-	{
-		glTFT object;
-		std::map<std::string, std::vector<uint8_t>> bindata;
-	};
 
 
 	// TODO: doc

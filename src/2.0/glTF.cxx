@@ -168,12 +168,7 @@ std::string(R"(: they always correspond to the actual values stored in the buffe
 /// Metadata about the glTF asset.
 table Asset 
 {
-	/// The user-defined name of this object.
-	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
-	name: string;
-
-	/// A copyright me)") +
-std::string(R"(ssage suitable for display to credit the content creator.
+	/// A copyright message suitable for display to credit the content creator.
 	copyright: string;
 	
 	/// Tool that generated this glTF model.  Useful for debugging.
@@ -181,11 +176,17 @@ std::string(R"(ssage suitable for display to credit the content creator.
 
 	/// The glTF version that this asset targets.
 	/// pattern: "^[0-9]+\\.[0-9]+$"
-	version: string(required);
+	version: string(re)") +
+std::string(R"(quired);
 
 	/// The minimum glTF version that this asset targets.
 	/// pattern": "^[0-9]+\\.[0-9]+$
 	minVersion: string;
+
+	///-- glTFChildOfRootProperty
+	/// The user-defined name of this object.
+	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+	name: string;
 
 	///-- glTFProperty
 	/// Dictionary object with extension-specific objects.
@@ -194,6 +195,7 @@ std::string(R"(ssage suitable for display to credit the content creator.
 	/// Application-specific data.
 	extras: [ubyte](flexbuffer);
 	///-- glTFProperty --/
+	///-- glTFChildOfRootProperty --/
 }
 ///-- asset.schema.json --/
 
@@ -233,9 +235,9 @@ table AnimationChannelTarget {
 /// "description": "Targets an animation's sampler at a node's property."
 table AnimationChannel {
 	/// "description": "The index of a sampler in this animation used to compute the value for the target."
-	/// "gltf_detailedDescription": "The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS)."
-	sam)") +
-std::string(R"(pler: int; //glTFid
+	/// "gltf_detailedDescription": "The index of a sampler in this animation used to compute the value for the t)") +
+std::string(R"(arget, e.g., a node's translation, rotation, or scale (TRS)."
+	sampler: int; //glTFid
 
 	/// "description": "The index of the node and TRS property to target."
     target: AnimationChannelTarget(required);
@@ -267,9 +269,9 @@ enum AnimationSamplerInterpolationAlgorithm: short { // string
 
 /// Animation Sampler
 /// "description": "Combines input and output accessors with an interpolation algorithm to define a keyframe graph (but not its target)."
-table AnimationSampler {
-	/// "description": "The index of an accessor co)") +
-std::string(R"(ntaining keyframe input values, e.g., time."
+table A)") +
+std::string(R"(nimationSampler {
+	/// "description": "The index of an accessor containing keyframe input values, e.g., time."
 	/// "gltf_detailedDescription": "The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
 	input: int; //glTFid
 
@@ -304,8 +306,8 @@ table Animation {
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.
-	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accesso)") +
-std::string(R"(rs could even have the same name.
+	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g.,)") +
+std::string(R"( an accessor and a buffer could have the same name, or two accessors could even have the same name.
 	name: string;
 
 	///-- glTFProperty
@@ -367,9 +369,9 @@ table BufferView {
 	/// "description": "The index of the buffer."
 	buffer: int; //glTFid
 
-	/// "description": "The offset into the buffer in bytes."
-	byteOffset:)") +
-std::string(R"( int = 0; //uint
+	/// )") +
+std::string(R"("description": "The offset into the buffer in bytes."
+	byteOffset: int = 0; //uint
 
 	// "description": "The length of the bufferView in bytes."
 	// "minimum": 1
@@ -418,10 +420,10 @@ table CameraOrthographic {
 	/// "description": "The floating-point distance to the far clipping plane. `zfar` must be greater than `znear`."
     zfar: float; // Number
 
-	/// "description": "The floating-point distance to the near clipping plane."
+	/// "description": "The floating-point )") +
+std::string(R"(distance to the near clipping plane."
     znear: float; // Number
-)") +
-std::string(R"(
+
 	///-- glTFProperty
 	/// Dictionary object with extension-specific objects.
 	extensions: [ubyte](flexbuffer);
@@ -470,8 +472,8 @@ enum CameraType: short {//string
 }
 
 table Camera {
-	/// "description": "An orthographic camera containing properties to create an orthographic projec)") +
-std::string(R"(tion matrix."
+	/// "description": "An orthogra)") +
+std::string(R"(phic camera containing properties to create an orthographic projection matrix."
 	orthographic: CameraOrthographic;
 
 	/// "description": "A perspective camera containing properties to create a perspective projection matrix."
@@ -513,9 +515,9 @@ table Image {
 	/// NOTE: JsonSchema states enum { "image/jpeg" "image/png" }, but this type of variables are not possible with flatbuffers, hence keeping the mimeType as string
 	mimeType: string;
 
-	/// "description": "The index of the bufferView that contains the image. Use this instead of the image's uri property."
-	bufferView:)") +
-std::string(R"( int; //glTFid
+	/// "description": "The index of the bufferView that contains the )") +
+std::string(R"(image. Use this instead of the image's uri property."
+	bufferView: int; //glTFid
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.
@@ -562,8 +564,8 @@ table TextureInfo {
 /// Material Normal Texture Info
 table MaterialNormalTextureInfo {
     /// "description": "The scalar multiplier applied to each normal vector of the normal texture."
-	/// "gltf_detailedDescription": "The scalar multiplier applied to each normal vector of the texture. This value scales the normal vector using the formula: `scaledNormal =  normalize((normalize(<sampled normal texture value>) * 2.0 - 1.0) * vec3(<normal scale>, <normal scale>, 1.0))`. This value is ignored if normal)") +
-std::string(R"(Texture is not specified. This value is linear."
+	/// "gltf_detailedDescription": "The scalar multiplier applied to each normal vector of the texture. This value scales the normal vector using the formula: `scaledNormal =  normalize((normalize(<sampled normal texture value>) * 2.0 - 1.0) * vec3(<norm)") +
+std::string(R"(al scale>, <normal scale>, 1.0))`. This value is ignored if normalTexture is not specified. This value is linear."
 	scale: float = 1.0; // Number
 
 	///-- TextureInfo
@@ -601,11 +603,11 @@ table MaterialOcclusionTextureInfo {
 	texCoord: int; //uint
 
 	///-- glTFProperty
-	/// Dictionary object with extension-specific objects.
+	/// Dictionary object with extension-specific ob)") +
+std::string(R"(jects.
 	extensions: [ubyte](flexbuffer);
 
-	/// Application-specifi)") +
-std::string(R"(c data.
+	/// Application-specific data.
 	extras: [ubyte](flexbuffer);
 	///-- glTFProperty --/
 	///-- TextureInfo --/
@@ -634,9 +636,9 @@ table MaterialPbrMetallicRoughness {
 	// "default": 1.0
 	metallicFactor: float = 1.0; // Number
 
-	/// "description": "The roughness of the material."
-	/// "gltf_detailedDescript)") +
-std::string(R"(ion": "The roughness of the material. A value of 1.0 means the material is completely rough. A value of 0.0 means the material is completely smooth. This value is linear. If a metallicRoughnessTexture is specified, this value is multiplied with the roughness texel values."
+	/// "descript)") +
+std::string(R"(ion": "The roughness of the material."
+	/// "gltf_detailedDescription": "The roughness of the material. A value of 1.0 means the material is completely rough. A value of 0.0 means the material is completely smooth. This value is linear. If a metallicRoughnessTexture is specified, this value is multiplied with the roughness texel values."
 	/// "minimum": 0.0
 	/// "maximum": 1.0
 	/// "default": 1.0
@@ -673,8 +675,8 @@ enum MaterialAlphaMode: short {
 /// Material
 /// "description": "The material appearance of a primitive."
 table Material {
-	/// "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) meth)") +
-std::string(R"(odology. When not specified, all the default values of `pbrMetallicRoughness` apply."
+	/// "description": "A set of parameter values that are used to define the metallic-r)") +
+std::string(R"(oughness material model from Physically-Based Rendering (PBR) methodology. When not specified, all the default values of `pbrMetallicRoughness` apply."
 	pbrMetallicRoughness: MaterialPbrMetallicRoughness;
 
 	/// "description": "The normal map texture."
@@ -696,9 +698,9 @@ std::string(R"(odology. When not specified, all the default values of `pbrMetall
 	/// "default": [ 0.0, 0.0, 0.0 ],
 	emissiveFactor: [float]; // Number
 	
-	/// "description": "The alpha rendering mode of the material."
-	/// "gltf_detailedDescription": "The material's alpha rendering )") +
-std::string(R"(mode enumeration specifying the interpretation of the alpha value of the main factor and texture."
+	/// "description": "The alpha rendering mode of the material.")") +
+std::string(R"(
+	/// "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture."
 	alphaMode: MaterialAlphaMode = OPAQUE;
 
 	/// "description": "The alpha cutoff value of the material."
@@ -740,10 +742,10 @@ enum MeshPrimitiveMode: ubyte {
 
 /// Mesh Primitive
 /// "description": "Geometry to be rendered with the given material."
-/// "gltf_webgl": "`drawElements()` and `drawArrays()`"
+/// "gltf_webgl": "`drawElements()` and `drawArrays()") +
+std::string(R"()`"
 table MeshPrimitive {
-	/// "description": "A dictionary object)") +
-std::string(R"(, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data."
+	/// "description": "A dictionary object, where each key corresponds to mesh attribute semantic and each value is the index of the accessor containing attribute's data."
 	///! NOTE: dictionary objects are not possible with flatbuffers (yet), hence this workaround
 	attributes: [ubyte](flexbuffer, required);
 
@@ -766,12 +768,12 @@ std::string(R"(, where each key corresponds to mesh attribute semantic and each 
 	/// Dictionary object with extension-specific objects.
 	extensions: [ubyte](flexbuffer);
 
-	/// Application-specific data.
+	/// Application-specific dat)") +
+std::string(R"(a.
 	extras: [ubyte](flexbuffer);
 	///-- glTFProperty --/
 }
-///-- m)") +
-std::string(R"(esh.primitive.schema.json --/
+///-- mesh.primitive.schema.json --/
 
 ///-- mesh.schema.json
 /// Mesh
@@ -808,11 +810,11 @@ table Node {
 	/// "description": "The index of the camera referenced by this node."
 	camera: int; //glTFid
 	
-	/// "description": "The indices of this node's children."
+	/// "description": "The indices of this node's child)") +
+std::string(R"(ren."
 	children: [int]; //glTFid
 	
-	/// "description": "The index )") +
-std::string(R"(of the skin referenced by this node."
+	/// "description": "The index of the skin referenced by this node."
 	skin: int; //glTFid
 
 	/// "description": "A floating-point 4x4 transformation matrix stored in column-major order."
@@ -866,12 +868,12 @@ std::string(R"(of the skin referenced by this node."
 }
 ///-- node.schema.json --/
 
-///----------------------------------------------------------------------------
+///---------------------------------------------------------------)") +
+std::string(R"(-------------
 
 ///-- scene.schema.json
 /// Scene
-/// "description")") +
-std::string(R"(: "The root nodes of a scene."
+/// "description": "The root nodes of a scene."
 table Scene {
 	/// "description": "The indices of each root node."
 	nodes: [int]; //glTFid
@@ -924,8 +926,8 @@ table Sampler {
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.
-	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily uni)") +
-std::string(R"(que, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+	/// gltf_detailedDescription: )") +
+std::string(R"(The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
 	name: string;
 
 	///-- glTFProperty
@@ -979,8 +981,8 @@ table Skin {
 	/// "description": "The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied."
 	inverseBindMatrices: int; //glTFid
 
-	/// "description": "The index of the node used as a skeleton root. When undef)") +
-std::string(R"(ined, joints transforms resolve to scene root."
+	/// "descri)") +
+std::string(R"(ption": "The index of the node used as a skeleton root. When undefined, joints transforms resolve to scene root."
 	skeleton: int; //glTFid
 
 	/// "description": "Indices of skeleton nodes, used as joints in this skin."
@@ -1033,8 +1035,8 @@ table glTF {
 	bufferViews: [BufferView];
 
 	/// An array of cameras.
-	/// gltf_detailedDescription: An array of cameras.  A camera defines a pr)") +
-std::string(R"(ojection matrix.
+	/// glt)") +
+std::string(R"(f_detailedDescription: An array of cameras.  A camera defines a projection matrix.
 	cameras: [Camera];
 
 	/// An array of images.

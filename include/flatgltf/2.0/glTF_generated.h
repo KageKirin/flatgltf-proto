@@ -1320,11 +1320,11 @@ namespace glTF_2_0
 		{
 			return "glTF_2_0.AssetT";
 		}
-		std::string			 name;
 		std::string			 copyright;
 		std::string			 generator;
 		std::string			 version;
 		std::string			 minVersion;
+		std::string			 name;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
 		AssetT()
@@ -1345,25 +1345,14 @@ namespace glTF_2_0
 		}
 		enum
 		{
-			VT_NAME		  = 4,
-			VT_COPYRIGHT  = 6,
-			VT_GENERATOR  = 8,
-			VT_VERSION	= 10,
-			VT_MINVERSION = 12,
+			VT_COPYRIGHT  = 4,
+			VT_GENERATOR  = 6,
+			VT_VERSION	= 8,
+			VT_MINVERSION = 10,
+			VT_NAME		  = 12,
 			VT_EXTENSIONS = 14,
 			VT_EXTRAS	 = 16
 		};
-		/// The user-defined name of this object.
-		/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an
-		/// accessor and a buffer could have the same name, or two accessors could even have the same name.
-		const flatbuffers::String* name() const
-		{
-			return GetPointer<const flatbuffers::String*>(VT_NAME);
-		}
-		flatbuffers::String* mutable_name()
-		{
-			return GetPointer<flatbuffers::String*>(VT_NAME);
-		}
 		/// A copyright message suitable for display to credit the content creator.
 		const flatbuffers::String* copyright() const
 		{
@@ -1402,6 +1391,18 @@ namespace glTF_2_0
 		{
 			return GetPointer<flatbuffers::String*>(VT_MINVERSION);
 		}
+		///-- glTFChildOfRootProperty
+		/// The user-defined name of this object.
+		/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an
+		/// accessor and a buffer could have the same name, or two accessors could even have the same name.
+		const flatbuffers::String* name() const
+		{
+			return GetPointer<const flatbuffers::String*>(VT_NAME);
+		}
+		flatbuffers::String* mutable_name()
+		{
+			return GetPointer<flatbuffers::String*>(VT_NAME);
+		}
 		///-- glTFProperty
 		/// Dictionary object with extension-specific objects.
 		const flatbuffers::Vector<uint8_t>* extensions() const
@@ -1433,11 +1434,11 @@ namespace glTF_2_0
 		}
 		bool Verify(flatbuffers::Verifier& verifier) const
 		{
-			return VerifyTableStart(verifier) && VerifyOffset(verifier, VT_NAME) && verifier.Verify(name())
-				   && VerifyOffset(verifier, VT_COPYRIGHT) && verifier.Verify(copyright()) && VerifyOffset(verifier, VT_GENERATOR)
-				   && verifier.Verify(generator()) && VerifyOffsetRequired(verifier, VT_VERSION)
-				   && verifier.Verify(version()) && VerifyOffset(verifier, VT_MINVERSION) && verifier.Verify(minVersion())
-				   && VerifyOffset(verifier, VT_EXTENSIONS) && verifier.Verify(extensions())
+			return VerifyTableStart(verifier) && VerifyOffset(verifier, VT_COPYRIGHT) && verifier.Verify(copyright())
+				   && VerifyOffset(verifier, VT_GENERATOR) && verifier.Verify(generator())
+				   && VerifyOffsetRequired(verifier, VT_VERSION) && verifier.Verify(version())
+				   && VerifyOffset(verifier, VT_MINVERSION) && verifier.Verify(minVersion()) && VerifyOffset(verifier, VT_NAME)
+				   && verifier.Verify(name()) && VerifyOffset(verifier, VT_EXTENSIONS) && verifier.Verify(extensions())
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		AssetT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
@@ -1451,10 +1452,6 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_name(flatbuffers::Offset<flatbuffers::String> name)
-		{
-			fbb_.AddOffset(Asset::VT_NAME, name);
-		}
 		void add_copyright(flatbuffers::Offset<flatbuffers::String> copyright)
 		{
 			fbb_.AddOffset(Asset::VT_COPYRIGHT, copyright);
@@ -1470,6 +1467,10 @@ namespace glTF_2_0
 		void add_minVersion(flatbuffers::Offset<flatbuffers::String> minVersion)
 		{
 			fbb_.AddOffset(Asset::VT_MINVERSION, minVersion);
+		}
+		void add_name(flatbuffers::Offset<flatbuffers::String> name)
+		{
+			fbb_.AddOffset(Asset::VT_NAME, name);
 		}
 		void add_extensions(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions)
 		{
@@ -1494,40 +1495,40 @@ namespace glTF_2_0
 	};
 
 	inline flatbuffers::Offset<Asset> CreateAsset(flatbuffers::FlatBufferBuilder&					_fbb,
-												  flatbuffers::Offset<flatbuffers::String>			name	   = 0,
 												  flatbuffers::Offset<flatbuffers::String>			copyright  = 0,
 												  flatbuffers::Offset<flatbuffers::String>			generator  = 0,
 												  flatbuffers::Offset<flatbuffers::String>			version	= 0,
 												  flatbuffers::Offset<flatbuffers::String>			minVersion = 0,
+												  flatbuffers::Offset<flatbuffers::String>			name	   = 0,
 												  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 												  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras	 = 0)
 	{
 		AssetBuilder builder_(_fbb);
 		builder_.add_extras(extras);
 		builder_.add_extensions(extensions);
+		builder_.add_name(name);
 		builder_.add_minVersion(minVersion);
 		builder_.add_version(version);
 		builder_.add_generator(generator);
 		builder_.add_copyright(copyright);
-		builder_.add_name(name);
 		return builder_.Finish();
 	}
 
 	inline flatbuffers::Offset<Asset> CreateAssetDirect(flatbuffers::FlatBufferBuilder& _fbb,
-														const char*						name	   = nullptr,
 														const char*						copyright  = nullptr,
 														const char*						generator  = nullptr,
 														const char*						version	= nullptr,
 														const char*						minVersion = nullptr,
+														const char*						name	   = nullptr,
 														const std::vector<uint8_t>*		extensions = nullptr,
 														const std::vector<uint8_t>*		extras	 = nullptr)
 	{
 		return glTF_2_0::CreateAsset(_fbb,
-									 name ? _fbb.CreateString(name) : 0,
 									 copyright ? _fbb.CreateString(copyright) : 0,
 									 generator ? _fbb.CreateString(generator) : 0,
 									 version ? _fbb.CreateString(version) : 0,
 									 minVersion ? _fbb.CreateString(minVersion) : 0,
+									 name ? _fbb.CreateString(name) : 0,
 									 extensions ? _fbb.CreateVector<uint8_t>(*extensions) : 0,
 									 extras ? _fbb.CreateVector<uint8_t>(*extras) : 0);
 	}
@@ -6897,11 +6898,6 @@ namespace glTF_2_0
 		(void)_o;
 		(void)_resolver;
 		{
-			auto _e = name();
-			if (_e)
-				_o->name = _e->str();
-		};
-		{
 			auto _e = copyright();
 			if (_e)
 				_o->copyright = _e->str();
@@ -6920,6 +6916,11 @@ namespace glTF_2_0
 			auto _e = minVersion();
 			if (_e)
 				_o->minVersion = _e->str();
+		};
+		{
+			auto _e = name();
+			if (_e)
+				_o->name = _e->str();
 		};
 		{
 			auto _e = extensions();
@@ -6958,14 +6959,14 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
-		auto _name		 = _o->name.size() ? _fbb.CreateString(_o->name) : 0;
 		auto _copyright  = _o->copyright.size() ? _fbb.CreateString(_o->copyright) : 0;
 		auto _generator  = _o->generator.size() ? _fbb.CreateString(_o->generator) : 0;
 		auto _version	= _fbb.CreateString(_o->version);
 		auto _minVersion = _o->minVersion.size() ? _fbb.CreateString(_o->minVersion) : 0;
+		auto _name		 = _o->name.size() ? _fbb.CreateString(_o->name) : 0;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
 		auto _extras	 = _o->extras.size() ? _fbb.CreateVector(_o->extras) : 0;
-		return glTF_2_0::CreateAsset(_fbb, _name, _copyright, _generator, _version, _minVersion, _extensions, _extras);
+		return glTF_2_0::CreateAsset(_fbb, _copyright, _generator, _version, _minVersion, _name, _extensions, _extras);
 	}
 
 	inline AnimationChannelTargetT* AnimationChannelTarget::UnPack(const flatbuffers::resolver_function_t* _resolver) const

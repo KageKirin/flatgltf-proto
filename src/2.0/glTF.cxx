@@ -1009,7 +1009,7 @@ std::string(R"(ption": "The index of the node used as a skeleton root. When unde
 
 ///-- glTF.schema.json
 /// The root object for a glTF asset.
-table glTF {
+table Root {
 	/// Names of glTF extensions used somewhere in this asset.
 	extensionsUsed: [string];
    
@@ -1082,7 +1082,27 @@ std::string(R"(f_detailedDescription: An array of cameras.  A camera defines a p
 }
 ///-- glTF.schema.json --/
 
-root_type glTF;
+root_type Root;
+
+///----------------------------------------------------------------------------
+
+///-- glTF-binary
+/// enums for glTF-binary/GLB files
+enum GLBConstant: uint {
+	/// version indicates the version of the Binary glTF container format. This specification defines version 2.
+	version = 2,
+
+	/// chunkType equals 0x004E4942	, ASCII string 'BIN'	
+	binary = 0x004E4942,
+
+	/// magic equals 0x46546C67. It is ASCII string 'glTF', and can be used to identify data as Binary glTF.
+	magic = 0x46546C67,
+
+	/// chunkType equals 0x4E4F534A, ASCII string 'JSON'
+	json = 0x4E4F534A,
+}
+///-- glTF-binary --/
+
 
 ///----------------------------------------------------------------------------
 )") +

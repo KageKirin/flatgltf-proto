@@ -91,8 +91,8 @@ namespace glTF_2_0
 	struct Skin;
 	struct SkinT;
 
-	struct glTF;
-	struct glTFT;
+	struct Root;
+	struct RootT;
 
 	///----------------------------------------------------------------------------
 	/// The datatype of components in the attribute.
@@ -435,6 +435,30 @@ namespace glTF_2_0
 	inline WrapMode (&EnumValuesWrapMode())[3]
 	{
 		static WrapMode values[] = {WrapMode::REPEAT, WrapMode::CLAMP_TO_EDGE, WrapMode::MIRRORED_REPEAT};
+		return values;
+	}
+
+	///----------------------------------------------------------------------------
+	///-- glTF-binary
+	/// enums for glTF-binary/GLB files
+	enum class GLBConstant : uint32_t
+	{
+		/// version indicates the version of the Binary glTF container format. This specification defines version 2.
+		version = 2	/// chunkType equals 0x004E4942	, ASCII string 'BIN'
+		,
+		binary = 5130562	/// magic equals 0x46546C67. It is ASCII string 'glTF', and can be used to identify data as
+							/// Binary glTF.
+		,
+		magic = 1179937895	/// chunkType equals 0x4E4F534A, ASCII string 'JSON'
+		,
+		json = 1313821514,
+		MIN  = version,
+		MAX  = json
+	};
+
+	inline GLBConstant (&EnumValuesGLBConstant())[4]
+	{
+		static GLBConstant values[] = {GLBConstant::version, GLBConstant::binary, GLBConstant::magic, GLBConstant::json};
 		return values;
 	}
 
@@ -6061,12 +6085,12 @@ namespace glTF_2_0
 										 const SkinT*							 _o,
 										 const flatbuffers::rehasher_function_t* _rehasher = nullptr);
 
-	struct glTFT : public flatbuffers::NativeTable
+	struct RootT : public flatbuffers::NativeTable
 	{
-		typedef glTF							 TableType;
+		typedef Root							 TableType;
 		static FLATBUFFERS_CONSTEXPR const char* GetFullyQualifiedName()
 		{
-			return "glTF_2_0.glTFT";
+			return "glTF_2_0.RootT";
 		}
 		std::vector<std::string>				  extensionsUsed;
 		std::vector<std::string>				  extensionsRequired;
@@ -6087,7 +6111,7 @@ namespace glTF_2_0
 		std::vector<std::unique_ptr<TextureT>>	textures;
 		std::vector<uint8_t>					  extensions;
 		std::vector<uint8_t>					  extras;
-		glTFT() : scene(0)
+		RootT() : scene(0)
 		{
 		}
 	};
@@ -6096,12 +6120,12 @@ namespace glTF_2_0
 	///----------------------------------------------------------------------------
 	///-- glTF.schema.json
 	/// The root object for a glTF asset.
-	struct glTF FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
+	struct Root FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
 	{
-		typedef glTFT							 NativeTableType;
+		typedef RootT							 NativeTableType;
 		static FLATBUFFERS_CONSTEXPR const char* GetFullyQualifiedName()
 		{
-			return "glTF_2_0.glTF";
+			return "glTF_2_0.Root";
 		}
 		enum
 		{
@@ -6345,109 +6369,109 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTENSIONS) && verifier.Verify(extensions())
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
-		glTFT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(glTFT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		static flatbuffers::Offset<glTF> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
-											  const glTFT*							  _o,
+		RootT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void UnPackTo(RootT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		static flatbuffers::Offset<Root> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
+											  const RootT*							  _o,
 											  const flatbuffers::rehasher_function_t* _rehasher = nullptr);
 	};
 
-	struct glTFBuilder
+	struct RootBuilder
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
 		void add_extensionsUsed(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> extensionsUsed)
 		{
-			fbb_.AddOffset(glTF::VT_EXTENSIONSUSED, extensionsUsed);
+			fbb_.AddOffset(Root::VT_EXTENSIONSUSED, extensionsUsed);
 		}
 		void add_extensionsRequired(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> extensionsRequired)
 		{
-			fbb_.AddOffset(glTF::VT_EXTENSIONSREQUIRED, extensionsRequired);
+			fbb_.AddOffset(Root::VT_EXTENSIONSREQUIRED, extensionsRequired);
 		}
 		void add_accessors(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Accessor>>> accessors)
 		{
-			fbb_.AddOffset(glTF::VT_ACCESSORS, accessors);
+			fbb_.AddOffset(Root::VT_ACCESSORS, accessors);
 		}
 		void add_animations(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Animation>>> animations)
 		{
-			fbb_.AddOffset(glTF::VT_ANIMATIONS, animations);
+			fbb_.AddOffset(Root::VT_ANIMATIONS, animations);
 		}
 		void add_asset(flatbuffers::Offset<Asset> asset)
 		{
-			fbb_.AddOffset(glTF::VT_ASSET, asset);
+			fbb_.AddOffset(Root::VT_ASSET, asset);
 		}
 		void add_buffers(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Buffer>>> buffers)
 		{
-			fbb_.AddOffset(glTF::VT_BUFFERS, buffers);
+			fbb_.AddOffset(Root::VT_BUFFERS, buffers);
 		}
 		void add_bufferViews(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<BufferView>>> bufferViews)
 		{
-			fbb_.AddOffset(glTF::VT_BUFFERVIEWS, bufferViews);
+			fbb_.AddOffset(Root::VT_BUFFERVIEWS, bufferViews);
 		}
 		void add_cameras(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Camera>>> cameras)
 		{
-			fbb_.AddOffset(glTF::VT_CAMERAS, cameras);
+			fbb_.AddOffset(Root::VT_CAMERAS, cameras);
 		}
 		void add_images(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Image>>> images)
 		{
-			fbb_.AddOffset(glTF::VT_IMAGES, images);
+			fbb_.AddOffset(Root::VT_IMAGES, images);
 		}
 		void add_materials(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Material>>> materials)
 		{
-			fbb_.AddOffset(glTF::VT_MATERIALS, materials);
+			fbb_.AddOffset(Root::VT_MATERIALS, materials);
 		}
 		void add_meshes(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Mesh>>> meshes)
 		{
-			fbb_.AddOffset(glTF::VT_MESHES, meshes);
+			fbb_.AddOffset(Root::VT_MESHES, meshes);
 		}
 		void add_nodes(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Node>>> nodes)
 		{
-			fbb_.AddOffset(glTF::VT_NODES, nodes);
+			fbb_.AddOffset(Root::VT_NODES, nodes);
 		}
 		void add_samplers(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Sampler>>> samplers)
 		{
-			fbb_.AddOffset(glTF::VT_SAMPLERS, samplers);
+			fbb_.AddOffset(Root::VT_SAMPLERS, samplers);
 		}
 		void add_scene(int32_t scene)
 		{
-			fbb_.AddElement<int32_t>(glTF::VT_SCENE, scene, 0);
+			fbb_.AddElement<int32_t>(Root::VT_SCENE, scene, 0);
 		}
 		void add_scenes(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Scene>>> scenes)
 		{
-			fbb_.AddOffset(glTF::VT_SCENES, scenes);
+			fbb_.AddOffset(Root::VT_SCENES, scenes);
 		}
 		void add_skins(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Skin>>> skins)
 		{
-			fbb_.AddOffset(glTF::VT_SKINS, skins);
+			fbb_.AddOffset(Root::VT_SKINS, skins);
 		}
 		void add_textures(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Texture>>> textures)
 		{
-			fbb_.AddOffset(glTF::VT_TEXTURES, textures);
+			fbb_.AddOffset(Root::VT_TEXTURES, textures);
 		}
 		void add_extensions(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions)
 		{
-			fbb_.AddOffset(glTF::VT_EXTENSIONS, extensions);
+			fbb_.AddOffset(Root::VT_EXTENSIONS, extensions);
 		}
 		void add_extras(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras)
 		{
-			fbb_.AddOffset(glTF::VT_EXTRAS, extras);
+			fbb_.AddOffset(Root::VT_EXTRAS, extras);
 		}
-		glTFBuilder(flatbuffers::FlatBufferBuilder& _fbb) : fbb_(_fbb)
+		RootBuilder(flatbuffers::FlatBufferBuilder& _fbb) : fbb_(_fbb)
 		{
 			start_ = fbb_.StartTable();
 		}
-		glTFBuilder&			  operator=(const glTFBuilder&);
-		flatbuffers::Offset<glTF> Finish()
+		RootBuilder&			  operator=(const RootBuilder&);
+		flatbuffers::Offset<Root> Finish()
 		{
 			const auto end = fbb_.EndTable(start_, 19);
-			auto	   o   = flatbuffers::Offset<glTF>(end);
-			fbb_.Required(o, glTF::VT_ASSET);
+			auto	   o   = flatbuffers::Offset<Root>(end);
+			fbb_.Required(o, Root::VT_ASSET);
 			return o;
 		}
 	};
 
-	inline flatbuffers::Offset<glTF>
-	CreateglTF(flatbuffers::FlatBufferBuilder&													  _fbb,
+	inline flatbuffers::Offset<Root>
+	CreateRoot(flatbuffers::FlatBufferBuilder&													  _fbb,
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> extensionsUsed = 0,
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> extensionsRequired = 0,
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Accessor>>>			  accessors   = 0,
@@ -6468,7 +6492,7 @@ namespace glTF_2_0
 			   flatbuffers::Offset<flatbuffers::Vector<uint8_t>>								  extensions  = 0,
 			   flatbuffers::Offset<flatbuffers::Vector<uint8_t>>								  extras	  = 0)
 	{
-		glTFBuilder builder_(_fbb);
+		RootBuilder builder_(_fbb);
 		builder_.add_extras(extras);
 		builder_.add_extensions(extensions);
 		builder_.add_textures(textures);
@@ -6491,8 +6515,8 @@ namespace glTF_2_0
 		return builder_.Finish();
 	}
 
-	inline flatbuffers::Offset<glTF>
-	CreateglTFDirect(flatbuffers::FlatBufferBuilder&							  _fbb,
+	inline flatbuffers::Offset<Root>
+	CreateRootDirect(flatbuffers::FlatBufferBuilder&							  _fbb,
 					 const std::vector<flatbuffers::Offset<flatbuffers::String>>* extensionsUsed	 = nullptr,
 					 const std::vector<flatbuffers::Offset<flatbuffers::String>>* extensionsRequired = nullptr,
 					 const std::vector<flatbuffers::Offset<Accessor>>*			  accessors			 = nullptr,
@@ -6513,7 +6537,7 @@ namespace glTF_2_0
 					 const std::vector<uint8_t>*								  extensions		 = nullptr,
 					 const std::vector<uint8_t>*								  extras			 = nullptr)
 	{
-		return glTF_2_0::CreateglTF(_fbb,
+		return glTF_2_0::CreateRoot(_fbb,
 									extensionsUsed ? _fbb.CreateVector<flatbuffers::Offset<flatbuffers::String>>(*extensionsUsed) : 0,
 									extensionsRequired ? _fbb.CreateVector<flatbuffers::Offset<flatbuffers::String>>(*extensionsRequired) : 0,
 									accessors ? _fbb.CreateVector<flatbuffers::Offset<Accessor>>(*accessors) : 0,
@@ -6535,8 +6559,8 @@ namespace glTF_2_0
 									extras ? _fbb.CreateVector<uint8_t>(*extras) : 0);
 	}
 
-	flatbuffers::Offset<glTF> CreateglTF(flatbuffers::FlatBufferBuilder&		 _fbb,
-										 const glTFT*							 _o,
+	flatbuffers::Offset<Root> CreateRoot(flatbuffers::FlatBufferBuilder&		 _fbb,
+										 const RootT*							 _o,
 										 const flatbuffers::rehasher_function_t* _rehasher = nullptr);
 
 	inline AccessorSparseIndicesT* AccessorSparseIndices::UnPack(const flatbuffers::resolver_function_t* _resolver) const
@@ -8704,14 +8728,14 @@ namespace glTF_2_0
 		return glTF_2_0::CreateSkin(_fbb, _inverseBindMatrices, _skeleton, _joints, _name, _extensions, _extras);
 	}
 
-	inline glTFT* glTF::UnPack(const flatbuffers::resolver_function_t* _resolver) const
+	inline RootT* Root::UnPack(const flatbuffers::resolver_function_t* _resolver) const
 	{
-		auto _o = new glTFT();
+		auto _o = new RootT();
 		UnPackTo(_o, _resolver);
 		return _o;
 	}
 
-	inline void glTF::UnPackTo(glTFT* _o, const flatbuffers::resolver_function_t* _resolver) const
+	inline void Root::UnPackTo(RootT* _o, const flatbuffers::resolver_function_t* _resolver) const
 	{
 		(void)_o;
 		(void)_resolver;
@@ -8913,15 +8937,15 @@ namespace glTF_2_0
 		};
 	}
 
-	inline flatbuffers::Offset<glTF> glTF::Pack(flatbuffers::FlatBufferBuilder&			_fbb,
-												const glTFT*							_o,
+	inline flatbuffers::Offset<Root> Root::Pack(flatbuffers::FlatBufferBuilder&			_fbb,
+												const RootT*							_o,
 												const flatbuffers::rehasher_function_t* _rehasher)
 	{
-		return CreateglTF(_fbb, _o, _rehasher);
+		return CreateRoot(_fbb, _o, _rehasher);
 	}
 
-	inline flatbuffers::Offset<glTF> CreateglTF(flatbuffers::FlatBufferBuilder&			_fbb,
-												const glTFT*							_o,
+	inline flatbuffers::Offset<Root> CreateRoot(flatbuffers::FlatBufferBuilder&			_fbb,
+												const RootT*							_o,
 												const flatbuffers::rehasher_function_t* _rehasher)
 	{
 		(void)_rehasher;
@@ -9006,7 +9030,7 @@ namespace glTF_2_0
 			  0;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
 		auto _extras	 = _o->extras.size() ? _fbb.CreateVector(_o->extras) : 0;
-		return glTF_2_0::CreateglTF(_fbb,
+		return glTF_2_0::CreateRoot(_fbb,
 									_extensionsUsed,
 									_extensionsRequired,
 									_accessors,
@@ -9028,44 +9052,44 @@ namespace glTF_2_0
 									_extras);
 	}
 
-	inline const glTF_2_0::glTF* GetglTF(const void* buf)
+	inline const glTF_2_0::Root* GetRoot(const void* buf)
 	{
-		return flatbuffers::GetRoot<glTF_2_0::glTF>(buf);
+		return flatbuffers::GetRoot<glTF_2_0::Root>(buf);
 	}
 
-	inline glTF* GetMutableglTF(void* buf)
+	inline Root* GetMutableRoot(void* buf)
 	{
-		return flatbuffers::GetMutableRoot<glTF>(buf);
+		return flatbuffers::GetMutableRoot<Root>(buf);
 	}
 
-	inline const char* glTFIdentifier()
+	inline const char* RootIdentifier()
 	{
 		return "glTF";
 	}
 
-	inline bool glTFBufferHasIdentifier(const void* buf)
+	inline bool RootBufferHasIdentifier(const void* buf)
 	{
-		return flatbuffers::BufferHasIdentifier(buf, glTFIdentifier());
+		return flatbuffers::BufferHasIdentifier(buf, RootIdentifier());
 	}
 
-	inline bool VerifyglTFBuffer(flatbuffers::Verifier& verifier)
+	inline bool VerifyRootBuffer(flatbuffers::Verifier& verifier)
 	{
-		return verifier.VerifyBuffer<glTF_2_0::glTF>(glTFIdentifier());
+		return verifier.VerifyBuffer<glTF_2_0::Root>(RootIdentifier());
 	}
 
-	inline const char* glTFExtension()
+	inline const char* RootExtension()
 	{
 		return "glf";
 	}
 
-	inline void FinishglTFBuffer(flatbuffers::FlatBufferBuilder& fbb, flatbuffers::Offset<glTF_2_0::glTF> root)
+	inline void FinishRootBuffer(flatbuffers::FlatBufferBuilder& fbb, flatbuffers::Offset<glTF_2_0::Root> root)
 	{
-		fbb.Finish(root, glTFIdentifier());
+		fbb.Finish(root, RootIdentifier());
 	}
 
-	inline std::unique_ptr<glTFT> UnPackglTF(const void* buf, const flatbuffers::resolver_function_t* res = nullptr)
+	inline std::unique_ptr<RootT> UnPackRoot(const void* buf, const flatbuffers::resolver_function_t* res = nullptr)
 	{
-		return std::unique_ptr<glTFT>(GetglTF(buf)->UnPack(res));
+		return std::unique_ptr<RootT>(GetRoot(buf)->UnPack(res));
 	}
 
 }	// namespace glTF_2_0

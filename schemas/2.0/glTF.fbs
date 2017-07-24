@@ -33,7 +33,7 @@ enum AccessorType: short { //string
 ///-- accessor.sparse.indices.schema.json
 table AccessorSparseIndices {
 	/// "description": "The index of the bufferView with sparse indices. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target."
-	bufferView: int; //glTFid
+	bufferView: int = -1; //glTFid
 
 	/// "description": "The offset relative to the start of the bufferView in bytes. Must be aligned."
 	byeOffset: int  = 0; //uint
@@ -53,7 +53,7 @@ table AccessorSparseIndices {
 ///-- accessor.sparse.values.schema.json
 table AccessorSparseValues {
 	/// "description": "The index of the bufferView with sparse values. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target."
-	bufferView: int; //glTFid
+	bufferView: int = -1; //glTFid
 
 	/// "description": "The offset relative to the start of the bufferView in bytes. Must be aligned."
 	byteOffset: int = 0; //uint
@@ -99,7 +99,7 @@ table Accessor
 {
 	/// "description": "The index of the bufferView."
 	/// "gltf_detailedDescription": "The index of the bufferView. When not defined, accessor must be initialized with zeros; `sparse` property or extensions could override zeros with actual values."    
-	bufferView: int; //glTFid
+	bufferView: int = -1; //glTFid
 	
 	/// "description": "The offset relative to the start of the bufferView in bytes."
 	/// "gltf_detailedDescription": "The offset relative to the start of the bufferView in bytes.  This must be a multiple of the size of the component datatype."
@@ -206,7 +206,7 @@ enum AnimationChannelTargetPath: short { //string
 /// "description": "The index of the node and TRS property that an animation channel targets."
 table AnimationChannelTarget {
 	/// "description": "The index of the node to target."
-	node: int; //glTFid
+	node: int = -1; //glTFid
 
 	/// "description": "The name of the node's TRS property to modify, or the \"weights\" of the Morph Targets it instantiates."
 	path: AnimationChannelTargetPath;
@@ -228,7 +228,7 @@ table AnimationChannelTarget {
 table AnimationChannel {
 	/// "description": "The index of a sampler in this animation used to compute the value for the target."
 	/// "gltf_detailedDescription": "The index of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS)."
-	sampler: int; //glTFid
+	sampler: int = -1; //glTFid
 
 	/// "description": "The index of the node and TRS property to target."
     target: AnimationChannelTarget(required);
@@ -263,7 +263,7 @@ enum AnimationSamplerInterpolationAlgorithm: short { // string
 table AnimationSampler {
 	/// "description": "The index of an accessor containing keyframe input values, e.g., time."
 	/// "gltf_detailedDescription": "The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
-	input: int; //glTFid
+	input: int = -1; //glTFid
 
 	/// "description": "Interpolation algorithm."
 	/// "gltf_detailedDescription": "Interpolation algorithm."
@@ -271,7 +271,7 @@ table AnimationSampler {
 
 	/// "description": "The index of an accessor, containing keyframe output values."
 	/// "gltf_detailedDescription": "The index of an accessor containing keyframe output values. When targeting TRS target, the `accessor.componentType` of the output values must be `FLOAT`. When targeting morph weights, the `accessor.componentType` of the output values must be `FLOAT` or normalized integer where each output element stores values with a count equal to the number of morph targets."
-	output: int; //glTFid
+	output: int = -1; //glTFid
 
 	///-- glTFProperty
 	/// Dictionary object with extension-specific objects.
@@ -356,7 +356,7 @@ enum BufferViewTarget: int {
 /// "description": "A view into a buffer generally representing a subset of the buffer."
 table BufferView {
 	/// "description": "The index of the buffer."
-	buffer: int; //glTFid
+	buffer: int = -1; //glTFid
 
 	/// "description": "The offset into the buffer in bytes."
 	byteOffset: int = 0; //uint
@@ -502,7 +502,7 @@ table Image {
 	mimeType: string;
 
 	/// "description": "The index of the bufferView that contains the image. Use this instead of the image's uri property."
-	bufferView: int; //glTFid
+	bufferView: int = -1; //glTFid
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.
@@ -527,7 +527,7 @@ table Image {
 /// "description": "Reference to a texture."
 table TextureInfo {
 	/// "description": "The index of the texture."
-	index: int; //glTFId
+	index: int = -1; //glTFId
 
 	/// "description": "The set index of texture's TEXCOORD attribute used for texture coordinate mapping."
 	/// "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0)."
@@ -554,7 +554,7 @@ table MaterialNormalTextureInfo {
 
 	///-- TextureInfo
 	/// "description": "The index of the texture."
-	index: int; //glTFId
+	index: int = -1; //glTFId
 
 	/// "description": "The set index of texture's TEXCOORD attribute used for texture coordinate mapping."
 	/// "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0)."
@@ -580,7 +580,7 @@ table MaterialOcclusionTextureInfo {
 
 	///-- TextureInfo
 	/// "description": "The index of the texture."
-	index: int; //glTFId
+	index: int = -1; //glTFId
 
 	/// "description": "The set index of texture's TEXCOORD attribute used for texture coordinate mapping."
 	/// "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0)."
@@ -720,6 +720,11 @@ enum MeshPrimitiveMode: ubyte {
 	TRIANGLE_FAN = 6,
 }
 
+table MeshPrimitiveAttribute {
+	id: string(key);
+	value: int = -1; //glTFid
+}
+
 /// Mesh Primitive
 /// "description": "Geometry to be rendered with the given material."
 /// "gltf_webgl": "`drawElements()` and `drawArrays()`"
@@ -730,10 +735,10 @@ table MeshPrimitive {
 
 	/// "description": "The index of the accessor that contains the indices."
 	/// "gltf_detailedDescription": "The index of the accessor that contains mesh indices.  When this is not defined, the primitives should be rendered without indices using `drawArrays()`.  When defined, the accessor must contain indices: the `bufferView` referenced by the accessor should have a `target` equal to 34963 (ELEMENT_ARRAY_BUFFER); `componentType` must be 5121 (UNSIGNED_BYTE), 5123 (UNSIGNED_SHORT) or 5125 (UNSIGNED_INT), the latter may require enabling additional hardware support; `type` must be `\"SCALAR\"`. For triangle primitives, the front face has a counter-clockwise (CCW) winding order."
-	indices: int; //glTFid
+	indices: int = -1; //glTFid
 
 	/// "description": "The index of the material to apply to this primitive when rendering."
-	material: int; //glTFid
+	material: int = -1; //glTFid
 
 	/// "description": "The type of primitives to render."
 	/// "gltf_detailedDescription": "The type of primitives to render. All valid values correspond to WebGL enums."
@@ -786,13 +791,13 @@ table Mesh {
 /// "description": "A node in the node hierarchy.  When the node contains `skin`, all `mesh.primitives` must contain `JOINTS_0` and `WEIGHTS_0` attributes.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix` will not be present."
 table Node {
 	/// "description": "The index of the camera referenced by this node."
-	camera: int; //glTFid
+	camera: int = -1; //glTFid
 	
 	/// "description": "The indices of this node's children."
 	children: [int]; //glTFid
 	
 	/// "description": "The index of the skin referenced by this node."
-	skin: int; //glTFid
+	skin: int = -1; //glTFid
 
 	/// "description": "A floating-point 4x4 transformation matrix stored in column-major order."
 	/// "gltf_detailedDescription": "A floating-point 4x4 transformation matrix stored in column-major order."
@@ -803,7 +808,7 @@ table Node {
 	matrix: [float]; // Number
 	
 	/// "description": "The index of the mesh in this node."
-	mesh: int; //glTFid
+	mesh: int = -1; //glTFid
 	
 	/// "description": "The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar."
 	/// "minimum": -1.0
@@ -853,6 +858,20 @@ table Node {
 table Scene {
 	/// "description": "The indices of each root node."
 	nodes: [int]; //glTFid
+
+	///-- glTFChildOfRootProperty
+	/// The user-defined name of this object.
+	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+	name: string;
+
+	///-- glTFProperty
+	/// Dictionary object with extension-specific objects.
+	extensions: [ubyte](flexbuffer);
+
+	/// Application-specific data.
+	extras: [ubyte](flexbuffer);
+	///-- glTFProperty --/
+	///-- glTFChildOfRootProperty --/
 }
 ///-- scene.schema.json --/
 
@@ -925,10 +944,10 @@ table Sampler {
 /// "gltf_webgl": "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
 table Texture {
 	/// "description": "The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering should be used."
-	sampler: int; //glTFid
+	sampler: int = -1; //glTFid
 
 	/// "description": "The index of the image used by this texture."
-	source: int; //glTFid
+	source: int = -1; //glTFid
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.
@@ -954,10 +973,10 @@ table Texture {
 /// "description": "Joints and matrices defining a skin."
 table Skin {
 	/// "description": "The index of the accessor containing the floating-point 4x4 inverse-bind matrices.  The default is that each matrix is a 4x4 identity matrix, which implies that inverse-bind matrices were pre-applied."
-	inverseBindMatrices: int; //glTFid
+	inverseBindMatrices: int = -1; //glTFid
 
 	/// "description": "The index of the node used as a skeleton root. When undefined, joints transforms resolve to scene root."
-	skeleton: int; //glTFid
+	skeleton: int = -1; //glTFid
 
 	/// "description": "Indices of skeleton nodes, used as joints in this skin."
 	/// "gltf_detailedDescription": "Indices of skeleton nodes, used as joints in this skin.  The array length must be the same as the `count` property of the `inverseBindMatrices` accessor (when defined)."
@@ -1032,7 +1051,7 @@ table Root {
 	samplers: [Sampler];
 
 	/// The index of the default scene.
-	scene: int; //glTFid
+	scene: int = -1; //glTFid
 
 	/// An array of scenes.
 	scenes: [Scene];

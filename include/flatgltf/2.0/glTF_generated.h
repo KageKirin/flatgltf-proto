@@ -70,6 +70,9 @@ namespace glTF_2_0
 	struct Material;
 	struct MaterialT;
 
+	struct MeshPrimitiveAttribute;
+	struct MeshPrimitiveAttributeT;
+
 	struct MeshPrimitive;
 	struct MeshPrimitiveT;
 
@@ -471,10 +474,10 @@ namespace glTF_2_0
 		}
 		int32_t				 bufferView;
 		int32_t				 byeOffset;
-		ComponentType		 componentType;
+		int32_t				 componentType;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		AccessorSparseIndicesT() : bufferView(0), byeOffset(0), componentType(ComponentType::BYTE)
+		AccessorSparseIndicesT() : bufferView(-1), byeOffset(0), componentType(-1)
 		{
 		}
 	};
@@ -499,11 +502,11 @@ namespace glTF_2_0
 		/// ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target."
 		int32_t bufferView() const
 		{
-			return GetField<int32_t>(VT_BUFFERVIEW, 0);
+			return GetField<int32_t>(VT_BUFFERVIEW, -1);
 		}
 		bool mutate_bufferView(int32_t _bufferView)
 		{
-			return SetField<int32_t>(VT_BUFFERVIEW, _bufferView, 0);
+			return SetField<int32_t>(VT_BUFFERVIEW, _bufferView, -1);
 		}
 		/// "description": "The offset relative to the start of the bufferView in bytes. Must be aligned."
 		int32_t byeOffset() const
@@ -514,13 +517,13 @@ namespace glTF_2_0
 		{
 			return SetField<int32_t>(VT_BYEOFFSET, _byeOffset, 0);
 		}
-		ComponentType componentType() const
+		int32_t componentType() const
 		{
-			return static_cast<ComponentType>(GetField<int32_t>(VT_COMPONENTTYPE, 5120));
+			return GetField<int32_t>(VT_COMPONENTTYPE, -1);
 		}
-		bool mutate_componentType(ComponentType _componentType)
+		bool mutate_componentType(int32_t _componentType)
 		{
-			return SetField<int32_t>(VT_COMPONENTTYPE, static_cast<int32_t>(_componentType), 5120);
+			return SetField<int32_t>(VT_COMPONENTTYPE, _componentType, -1);
 		}
 		///-- glTFProperty
 		/// Dictionary object with extension-specific objects.
@@ -569,17 +572,17 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_bufferView(int32_t bufferView)
+		void							add_bufferView(int32_t bufferView)
 		{
-			fbb_.AddElement<int32_t>(AccessorSparseIndices::VT_BUFFERVIEW, bufferView, 0);
+			fbb_.AddElement<int32_t>(AccessorSparseIndices::VT_BUFFERVIEW, bufferView, -1);
 		}
 		void add_byeOffset(int32_t byeOffset)
 		{
 			fbb_.AddElement<int32_t>(AccessorSparseIndices::VT_BYEOFFSET, byeOffset, 0);
 		}
-		void add_componentType(ComponentType componentType)
+		void add_componentType(int32_t componentType)
 		{
-			fbb_.AddElement<int32_t>(AccessorSparseIndices::VT_COMPONENTTYPE, static_cast<int32_t>(componentType), 5120);
+			fbb_.AddElement<int32_t>(AccessorSparseIndices::VT_COMPONENTTYPE, componentType, -1);
 		}
 		void add_extensions(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions)
 		{
@@ -604,9 +607,9 @@ namespace glTF_2_0
 
 	inline flatbuffers::Offset<AccessorSparseIndices>
 	CreateAccessorSparseIndices(flatbuffers::FlatBufferBuilder&					  _fbb,
-								int32_t											  bufferView	= 0,
+								int32_t											  bufferView	= -1,
 								int32_t											  byeOffset		= 0,
-								ComponentType									  componentType = ComponentType::BYTE,
+								int32_t											  componentType = -1,
 								flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions	= 0,
 								flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras		= 0)
 	{
@@ -619,13 +622,12 @@ namespace glTF_2_0
 		return builder_.Finish();
 	}
 
-	inline flatbuffers::Offset<AccessorSparseIndices>
-	CreateAccessorSparseIndicesDirect(flatbuffers::FlatBufferBuilder& _fbb,
-									  int32_t						  bufferView	= 0,
-									  int32_t						  byeOffset		= 0,
-									  ComponentType					  componentType = ComponentType::BYTE,
-									  const std::vector<uint8_t>*	 extensions	= nullptr,
-									  const std::vector<uint8_t>*	 extras		= nullptr)
+	inline flatbuffers::Offset<AccessorSparseIndices> CreateAccessorSparseIndicesDirect(flatbuffers::FlatBufferBuilder& _fbb,
+																						int32_t bufferView	= -1,
+																						int32_t byeOffset	 = 0,
+																						int32_t componentType = -1,
+																						const std::vector<uint8_t>* extensions = nullptr,
+																						const std::vector<uint8_t>* extras = nullptr)
 	{
 		return glTF_2_0::CreateAccessorSparseIndices(_fbb,
 													 bufferView,
@@ -650,7 +652,7 @@ namespace glTF_2_0
 		int32_t				 byteOffset;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		AccessorSparseValuesT() : bufferView(0), byteOffset(0)
+		AccessorSparseValuesT() : bufferView(-1), byteOffset(0)
 		{
 		}
 	};
@@ -675,11 +677,11 @@ namespace glTF_2_0
 		/// ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target."
 		int32_t bufferView() const
 		{
-			return GetField<int32_t>(VT_BUFFERVIEW, 0);
+			return GetField<int32_t>(VT_BUFFERVIEW, -1);
 		}
 		bool mutate_bufferView(int32_t _bufferView)
 		{
-			return SetField<int32_t>(VT_BUFFERVIEW, _bufferView, 0);
+			return SetField<int32_t>(VT_BUFFERVIEW, _bufferView, -1);
 		}
 		/// "description": "The offset relative to the start of the bufferView in bytes. Must be aligned."
 		int32_t byteOffset() const
@@ -737,9 +739,9 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_bufferView(int32_t bufferView)
+		void							add_bufferView(int32_t bufferView)
 		{
-			fbb_.AddElement<int32_t>(AccessorSparseValues::VT_BUFFERVIEW, bufferView, 0);
+			fbb_.AddElement<int32_t>(AccessorSparseValues::VT_BUFFERVIEW, bufferView, -1);
 		}
 		void add_byteOffset(int32_t byteOffset)
 		{
@@ -768,7 +770,7 @@ namespace glTF_2_0
 
 	inline flatbuffers::Offset<AccessorSparseValues>
 	CreateAccessorSparseValues(flatbuffers::FlatBufferBuilder&					 _fbb,
-							   int32_t											 bufferView = 0,
+							   int32_t											 bufferView = -1,
 							   int32_t											 byteOffset = 0,
 							   flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 							   flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras		= 0)
@@ -782,7 +784,7 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<AccessorSparseValues> CreateAccessorSparseValuesDirect(flatbuffers::FlatBufferBuilder& _fbb,
-																					  int32_t bufferView = 0,
+																					  int32_t bufferView = -1,
 																					  int32_t byteOffset = 0,
 																					  const std::vector<uint8_t>* extensions = nullptr,
 																					  const std::vector<uint8_t>* extras = nullptr)
@@ -914,7 +916,7 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_count(int32_t count)
+		void							add_count(int32_t count)
 		{
 			fbb_.AddElement<int32_t>(AccessorSparse::VT_COUNT, count, 0);
 		}
@@ -995,7 +997,7 @@ namespace glTF_2_0
 		}
 		int32_t										  bufferView;
 		int32_t										  byteOffset;
-		ComponentType								  componentType;
+		int32_t										  componentType;
 		bool										  normalized;
 		int32_t										  count;
 		AccessorType								  type;
@@ -1006,7 +1008,7 @@ namespace glTF_2_0
 		std::vector<uint8_t>						  extensions;
 		std::vector<uint8_t>						  extras;
 		AccessorT()
-			: bufferView(0), byteOffset(0), componentType(ComponentType::UNSIGNED_BYTE), normalized(false), count(1), type(AccessorType::SCALAR)
+			: bufferView(-1), byteOffset(0), componentType(-1), normalized(false), count(1), type(AccessorType::SCALAR)
 		{
 		}
 	};
@@ -1042,11 +1044,11 @@ namespace glTF_2_0
 		/// with zeros; `sparse` property or extensions could override zeros with actual values."
 		int32_t bufferView() const
 		{
-			return GetField<int32_t>(VT_BUFFERVIEW, 0);
+			return GetField<int32_t>(VT_BUFFERVIEW, -1);
 		}
 		bool mutate_bufferView(int32_t _bufferView)
 		{
-			return SetField<int32_t>(VT_BUFFERVIEW, _bufferView, 0);
+			return SetField<int32_t>(VT_BUFFERVIEW, _bufferView, -1);
 		}
 		/// "description": "The offset relative to the start of the bufferView in bytes."
 		/// "gltf_detailedDescription": "The offset relative to the start of the bufferView in bytes.  This must be a
@@ -1065,13 +1067,13 @@ namespace glTF_2_0
 		/// `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor
 		/// contains indices, i.e., the accessor is only referenced by `primitive.indices`." "gltf_webgl":
 		/// "`vertexAttribPointer()` type parameter"
-		ComponentType componentType() const
+		int32_t componentType() const
 		{
-			return static_cast<ComponentType>(GetField<int32_t>(VT_COMPONENTTYPE, 5121));
+			return GetField<int32_t>(VT_COMPONENTTYPE, -1);
 		}
-		bool mutate_componentType(ComponentType _componentType)
+		bool mutate_componentType(int32_t _componentType)
 		{
-			return SetField<int32_t>(VT_COMPONENTTYPE, static_cast<int32_t>(_componentType), 5121);
+			return SetField<int32_t>(VT_COMPONENTTYPE, _componentType, -1);
 		}
 		/// "description": "Specifies whether integer data values should be normalized."
 		/// "gltf_detailedDescription": "Specifies whether integer data values should be normalized (`true`) to [0, 1]
@@ -1111,8 +1113,8 @@ namespace glTF_2_0
 		/// "maxItems": 16,
 		/// "gltf_detailedDescription": "Maximum value of each component in this attribute.  Array elements must be
 		/// treated as having the same data type as accessor's `componentType`. Both min and max arrays have the same
-		/// length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or
-		/// 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values
+		/// length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9,
+		/// or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values
 		/// stored in the buffer. When accessor is sparse, this property must contain max values of accessor data with
 		/// sparse substitution applied."
 		const flatbuffers::Vector<float>* max() const
@@ -1128,8 +1130,8 @@ namespace glTF_2_0
 		/// "maxItems": 16,
 		/// "gltf_detailedDescription": "Minimum value of each component in this attribute.  Array elements must be
 		/// treated as having the same data type as accessor's `componentType`. Both min and max arrays have the same
-		/// length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or
-		/// 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values
+		/// length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9,
+		/// or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values
 		/// stored in the buffer. When accessor is sparse, this property must contain min values of accessor data with
 		/// sparse substitution applied."
 		const flatbuffers::Vector<float>* min() const
@@ -1202,7 +1204,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		AccessorT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(AccessorT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	   UnPackTo(AccessorT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Accessor> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
 												  const AccessorT*						  _o,
 												  const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -1212,17 +1214,17 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_bufferView(int32_t bufferView)
+		void							add_bufferView(int32_t bufferView)
 		{
-			fbb_.AddElement<int32_t>(Accessor::VT_BUFFERVIEW, bufferView, 0);
+			fbb_.AddElement<int32_t>(Accessor::VT_BUFFERVIEW, bufferView, -1);
 		}
 		void add_byteOffset(int32_t byteOffset)
 		{
 			fbb_.AddElement<int32_t>(Accessor::VT_BYTEOFFSET, byteOffset, 0);
 		}
-		void add_componentType(ComponentType componentType)
+		void add_componentType(int32_t componentType)
 		{
-			fbb_.AddElement<int32_t>(Accessor::VT_COMPONENTTYPE, static_cast<int32_t>(componentType), 5121);
+			fbb_.AddElement<int32_t>(Accessor::VT_COMPONENTTYPE, componentType, -1);
 		}
 		void add_normalized(bool normalized)
 		{
@@ -1274,12 +1276,12 @@ namespace glTF_2_0
 	};
 
 	inline flatbuffers::Offset<Accessor> CreateAccessor(flatbuffers::FlatBufferBuilder& _fbb,
-														int32_t							bufferView = 0,
-														int32_t							byteOffset = 0,
-														ComponentType componentType = ComponentType::UNSIGNED_BYTE,
-														bool		  normalized	= false,
-														int32_t		  count			= 1,
-														AccessorType  type			= AccessorType::SCALAR,
+														int32_t							bufferView	= -1,
+														int32_t							byteOffset	= 0,
+														int32_t							componentType = -1,
+														bool							normalized	= false,
+														int32_t							count		  = 1,
+														AccessorType					type = AccessorType::SCALAR,
 														flatbuffers::Offset<flatbuffers::Vector<float>> max = 0,
 														flatbuffers::Offset<flatbuffers::Vector<float>> min = 0,
 														flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AccessorSparse>>> sparse
@@ -1305,14 +1307,14 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<Accessor> CreateAccessorDirect(flatbuffers::FlatBufferBuilder& _fbb,
-															  int32_t						  bufferView = 0,
-															  int32_t						  byteOffset = 0,
-															  ComponentType componentType = ComponentType::UNSIGNED_BYTE,
-															  bool			normalized	= false,
-															  int32_t		count		  = 1,
-															  AccessorType  type		  = AccessorType::SCALAR,
-															  const std::vector<float>* max = nullptr,
-															  const std::vector<float>* min = nullptr,
+															  int32_t						  bufferView	= -1,
+															  int32_t						  byteOffset	= 0,
+															  int32_t						  componentType = -1,
+															  bool							  normalized	= false,
+															  int32_t						  count			= 1,
+															  AccessorType				type = AccessorType::SCALAR,
+															  const std::vector<float>* max  = nullptr,
+															  const std::vector<float>* min  = nullptr,
 															  const std::vector<flatbuffers::Offset<AccessorSparse>>* sparse = nullptr,
 															  const char*				  name		 = nullptr,
 															  const std::vector<uint8_t>* extensions = nullptr,
@@ -1466,7 +1468,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		AssetT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(AssetT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	UnPackTo(AssetT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Asset> Pack(flatbuffers::FlatBufferBuilder&		   _fbb,
 											   const AssetT*						   _o,
 											   const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -1476,7 +1478,7 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_copyright(flatbuffers::Offset<flatbuffers::String> copyright)
+		void							add_copyright(flatbuffers::Offset<flatbuffers::String> copyright)
 		{
 			fbb_.AddOffset(Asset::VT_COPYRIGHT, copyright);
 		}
@@ -1572,7 +1574,7 @@ namespace glTF_2_0
 		AnimationChannelTargetPath path;
 		std::vector<uint8_t>	   extensions;
 		std::vector<uint8_t>	   extras;
-		AnimationChannelTargetT() : node(0), path(AnimationChannelTargetPath::translation)
+		AnimationChannelTargetT() : node(-1), path(AnimationChannelTargetPath::translation)
 		{
 		}
 	};
@@ -1596,11 +1598,11 @@ namespace glTF_2_0
 		/// "description": "The index of the node to target."
 		int32_t node() const
 		{
-			return GetField<int32_t>(VT_NODE, 0);
+			return GetField<int32_t>(VT_NODE, -1);
 		}
 		bool mutate_node(int32_t _node)
 		{
-			return SetField<int32_t>(VT_NODE, _node, 0);
+			return SetField<int32_t>(VT_NODE, _node, -1);
 		}
 		/// "description": "The name of the node's TRS property to modify, or the \"weights\" of the Morph Targets it
 		/// instantiates."
@@ -1658,9 +1660,9 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_node(int32_t node)
+		void							add_node(int32_t node)
 		{
-			fbb_.AddElement<int32_t>(AnimationChannelTarget::VT_NODE, node, 0);
+			fbb_.AddElement<int32_t>(AnimationChannelTarget::VT_NODE, node, -1);
 		}
 		void add_path(AnimationChannelTargetPath path)
 		{
@@ -1689,7 +1691,7 @@ namespace glTF_2_0
 
 	inline flatbuffers::Offset<AnimationChannelTarget>
 	CreateAnimationChannelTarget(flatbuffers::FlatBufferBuilder& _fbb,
-								 int32_t						 node = 0,
+								 int32_t						 node = -1,
 								 AnimationChannelTargetPath		 path = AnimationChannelTargetPath::translation,
 								 flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 								 flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras	 = 0)
@@ -1704,7 +1706,7 @@ namespace glTF_2_0
 
 	inline flatbuffers::Offset<AnimationChannelTarget>
 	CreateAnimationChannelTargetDirect(flatbuffers::FlatBufferBuilder& _fbb,
-									   int32_t						   node = 0,
+									   int32_t						   node = -1,
 									   AnimationChannelTargetPath	  path = AnimationChannelTargetPath::translation,
 									   const std::vector<uint8_t>*	 extensions = nullptr,
 									   const std::vector<uint8_t>*	 extras	 = nullptr)
@@ -1732,7 +1734,7 @@ namespace glTF_2_0
 		std::unique_ptr<AnimationChannelTargetT> target;
 		std::vector<uint8_t>					 extensions;
 		std::vector<uint8_t>					 extras;
-		AnimationChannelT() : sampler(0)
+		AnimationChannelT() : sampler(-1)
 		{
 		}
 	};
@@ -1760,11 +1762,11 @@ namespace glTF_2_0
 		/// target, e.g., a node's translation, rotation, or scale (TRS)."
 		int32_t sampler() const
 		{
-			return GetField<int32_t>(VT_SAMPLER, 0);
+			return GetField<int32_t>(VT_SAMPLER, -1);
 		}
 		bool mutate_sampler(int32_t _sampler)
 		{
-			return SetField<int32_t>(VT_SAMPLER, _sampler, 0);
+			return SetField<int32_t>(VT_SAMPLER, _sampler, -1);
 		}
 		/// "description": "The index of the node and TRS property to target."
 		const AnimationChannelTarget* target() const
@@ -1822,9 +1824,9 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_sampler(int32_t sampler)
+		void							add_sampler(int32_t sampler)
 		{
-			fbb_.AddElement<int32_t>(AnimationChannel::VT_SAMPLER, sampler, 0);
+			fbb_.AddElement<int32_t>(AnimationChannel::VT_SAMPLER, sampler, -1);
 		}
 		void add_target(flatbuffers::Offset<AnimationChannelTarget> target)
 		{
@@ -1853,7 +1855,7 @@ namespace glTF_2_0
 	};
 
 	inline flatbuffers::Offset<AnimationChannel> CreateAnimationChannel(flatbuffers::FlatBufferBuilder& _fbb,
-																		int32_t							sampler = 0,
+																		int32_t							sampler = -1,
 																		flatbuffers::Offset<AnimationChannelTarget> target = 0,
 																		flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 																		flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras = 0)
@@ -1867,7 +1869,7 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<AnimationChannel> CreateAnimationChannelDirect(flatbuffers::FlatBufferBuilder& _fbb,
-																			  int32_t sampler = 0,
+																			  int32_t sampler = -1,
 																			  flatbuffers::Offset<AnimationChannelTarget> target = 0,
 																			  const std::vector<uint8_t>* extensions = nullptr,
 																			  const std::vector<uint8_t>* extras = nullptr)
@@ -1895,7 +1897,7 @@ namespace glTF_2_0
 		int32_t								   output;
 		std::vector<uint8_t>				   extensions;
 		std::vector<uint8_t>				   extras;
-		AnimationSamplerT() : input(0), interpolation(AnimationSamplerInterpolationAlgorithm::LINEAR), output(0)
+		AnimationSamplerT() : input(-1), interpolation(AnimationSamplerInterpolationAlgorithm::LINEAR), output(-1)
 		{
 		}
 	};
@@ -1924,11 +1926,11 @@ namespace glTF_2_0
 		/// strictly increasing values, i.e., `time[n + 1] > time[n]`."
 		int32_t input() const
 		{
-			return GetField<int32_t>(VT_INPUT, 0);
+			return GetField<int32_t>(VT_INPUT, -1);
 		}
 		bool mutate_input(int32_t _input)
 		{
-			return SetField<int32_t>(VT_INPUT, _input, 0);
+			return SetField<int32_t>(VT_INPUT, _input, -1);
 		}
 		/// "description": "Interpolation algorithm."
 		/// "gltf_detailedDescription": "Interpolation algorithm."
@@ -1947,11 +1949,11 @@ namespace glTF_2_0
 		/// element stores values with a count equal to the number of morph targets."
 		int32_t output() const
 		{
-			return GetField<int32_t>(VT_OUTPUT, 0);
+			return GetField<int32_t>(VT_OUTPUT, -1);
 		}
 		bool mutate_output(int32_t _output)
 		{
-			return SetField<int32_t>(VT_OUTPUT, _output, 0);
+			return SetField<int32_t>(VT_OUTPUT, _output, -1);
 		}
 		///-- glTFProperty
 		/// Dictionary object with extension-specific objects.
@@ -2000,9 +2002,9 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_input(int32_t input)
+		void							add_input(int32_t input)
 		{
-			fbb_.AddElement<int32_t>(AnimationSampler::VT_INPUT, input, 0);
+			fbb_.AddElement<int32_t>(AnimationSampler::VT_INPUT, input, -1);
 		}
 		void add_interpolation(AnimationSamplerInterpolationAlgorithm interpolation)
 		{
@@ -2010,7 +2012,7 @@ namespace glTF_2_0
 		}
 		void add_output(int32_t output)
 		{
-			fbb_.AddElement<int32_t>(AnimationSampler::VT_OUTPUT, output, 0);
+			fbb_.AddElement<int32_t>(AnimationSampler::VT_OUTPUT, output, -1);
 		}
 		void add_extensions(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions)
 		{
@@ -2035,9 +2037,9 @@ namespace glTF_2_0
 
 	inline flatbuffers::Offset<AnimationSampler>
 	CreateAnimationSampler(flatbuffers::FlatBufferBuilder& _fbb,
-						   int32_t						   input				= 0,
+						   int32_t						   input				= -1,
 						   AnimationSamplerInterpolationAlgorithm interpolation = AnimationSamplerInterpolationAlgorithm::LINEAR,
-						   int32_t								  output				= 0,
+						   int32_t								  output				= -1,
 						   flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 						   flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras		= 0)
 	{
@@ -2051,10 +2053,10 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<AnimationSampler> CreateAnimationSamplerDirect(flatbuffers::FlatBufferBuilder& _fbb,
-																			  int32_t						  input = 0,
+																			  int32_t input = -1,
 																			  AnimationSamplerInterpolationAlgorithm interpolation
 																			  = AnimationSamplerInterpolationAlgorithm::LINEAR,
-																			  int32_t					  output = 0,
+																			  int32_t					  output = -1,
 																			  const std::vector<uint8_t>* extensions = nullptr,
 																			  const std::vector<uint8_t>* extras = nullptr)
 	{
@@ -2176,7 +2178,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		AnimationT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(AnimationT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void		UnPackTo(AnimationT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Animation> Pack(flatbuffers::FlatBufferBuilder&		   _fbb,
 												   const AnimationT*					   _o,
 												   const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -2364,7 +2366,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		BufferT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(BufferT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	 UnPackTo(BufferT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Buffer> Pack(flatbuffers::FlatBufferBuilder&			_fbb,
 												const BufferT*							_o,
 												const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -2374,7 +2376,7 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_uri(flatbuffers::Offset<flatbuffers::String> uri)
+		void							add_uri(flatbuffers::Offset<flatbuffers::String> uri)
 		{
 			fbb_.AddOffset(Buffer::VT_URI, uri);
 		}
@@ -2453,11 +2455,11 @@ namespace glTF_2_0
 		int32_t				 byteOffset;
 		int32_t				 byteLength;
 		int32_t				 byteStride;
-		BufferViewTarget	 target;
+		int32_t				 target;
 		std::string			 name;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		BufferViewT() : buffer(0), byteOffset(0), byteLength(0), byteStride(0), target(BufferViewTarget::ARRAY_BUFFER)
+		BufferViewT() : buffer(-1), byteOffset(0), byteLength(0), byteStride(0), target(-1)
 		{
 		}
 	};
@@ -2485,11 +2487,11 @@ namespace glTF_2_0
 		/// "description": "The index of the buffer."
 		int32_t buffer() const
 		{
-			return GetField<int32_t>(VT_BUFFER, 0);
+			return GetField<int32_t>(VT_BUFFER, -1);
 		}
 		bool mutate_buffer(int32_t _buffer)
 		{
-			return SetField<int32_t>(VT_BUFFER, _buffer, 0);
+			return SetField<int32_t>(VT_BUFFER, _buffer, -1);
 		}
 		/// "description": "The offset into the buffer in bytes."
 		int32_t byteOffset() const
@@ -2525,13 +2527,13 @@ namespace glTF_2_0
 		}
 		/// "description": "The target that the GPU buffer should be bound to."
 		/// "gltf_webgl": "`bindBuffer()`"
-		BufferViewTarget target() const
+		int32_t target() const
 		{
-			return static_cast<BufferViewTarget>(GetField<int32_t>(VT_TARGET, 34962));
+			return GetField<int32_t>(VT_TARGET, -1);
 		}
-		bool mutate_target(BufferViewTarget _target)
+		bool mutate_target(int32_t _target)
 		{
-			return SetField<int32_t>(VT_TARGET, static_cast<int32_t>(_target), 34962);
+			return SetField<int32_t>(VT_TARGET, _target, -1);
 		}
 		///-- glTFChildOfRootProperty
 		/// The user-defined name of this object.
@@ -2584,7 +2586,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		BufferViewT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(BufferViewT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void		 UnPackTo(BufferViewT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<BufferView> Pack(flatbuffers::FlatBufferBuilder&			_fbb,
 													const BufferViewT*						_o,
 													const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -2594,9 +2596,9 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_buffer(int32_t buffer)
+		void							add_buffer(int32_t buffer)
 		{
-			fbb_.AddElement<int32_t>(BufferView::VT_BUFFER, buffer, 0);
+			fbb_.AddElement<int32_t>(BufferView::VT_BUFFER, buffer, -1);
 		}
 		void add_byteOffset(int32_t byteOffset)
 		{
@@ -2610,9 +2612,9 @@ namespace glTF_2_0
 		{
 			fbb_.AddElement<int32_t>(BufferView::VT_BYTESTRIDE, byteStride, 0);
 		}
-		void add_target(BufferViewTarget target)
+		void add_target(int32_t target)
 		{
-			fbb_.AddElement<int32_t>(BufferView::VT_TARGET, static_cast<int32_t>(target), 34962);
+			fbb_.AddElement<int32_t>(BufferView::VT_TARGET, target, -1);
 		}
 		void add_name(flatbuffers::Offset<flatbuffers::String> name)
 		{
@@ -2639,13 +2641,13 @@ namespace glTF_2_0
 		}
 	};
 
-	inline flatbuffers::Offset<BufferView> CreateBufferView(flatbuffers::FlatBufferBuilder& _fbb,
-															int32_t							buffer	 = 0,
-															int32_t							byteOffset = 0,
-															int32_t							byteLength = 0,
-															int32_t							byteStride = 0,
-															BufferViewTarget target = BufferViewTarget::ARRAY_BUFFER,
-															flatbuffers::Offset<flatbuffers::String>		  name = 0,
+	inline flatbuffers::Offset<BufferView> CreateBufferView(flatbuffers::FlatBufferBuilder&			 _fbb,
+															int32_t									 buffer		= -1,
+															int32_t									 byteOffset = 0,
+															int32_t									 byteLength = 0,
+															int32_t									 byteStride = 0,
+															int32_t									 target		= -1,
+															flatbuffers::Offset<flatbuffers::String> name		= 0,
 															flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 															flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras = 0)
 	{
@@ -2662,14 +2664,14 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<BufferView> CreateBufferViewDirect(flatbuffers::FlatBufferBuilder& _fbb,
-																  int32_t						  buffer	 = 0,
+																  int32_t						  buffer	 = -1,
 																  int32_t						  byteOffset = 0,
 																  int32_t						  byteLength = 0,
 																  int32_t						  byteStride = 0,
-																  BufferViewTarget target = BufferViewTarget::ARRAY_BUFFER,
-																  const char*	  name					 = nullptr,
-																  const std::vector<uint8_t>* extensions = nullptr,
-																  const std::vector<uint8_t>* extras	 = nullptr)
+																  int32_t						  target	 = -1,
+																  const char*					  name		 = nullptr,
+																  const std::vector<uint8_t>*	 extensions = nullptr,
+																  const std::vector<uint8_t>*	 extras	 = nullptr)
 	{
 		return glTF_2_0::CreateBufferView(_fbb,
 										  buffer,
@@ -2808,7 +2810,7 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_xmag(float xmag)
+		void							add_xmag(float xmag)
 		{
 			fbb_.AddElement<float>(CameraOrthographic::VT_XMAG, xmag, 0.0f);
 		}
@@ -3012,7 +3014,7 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_aspectRatio(float aspectRatio)
+		void							add_aspectRatio(float aspectRatio)
 		{
 			fbb_.AddElement<float>(CameraPerspective::VT_ASPECTRATIO, aspectRatio, 0.0f);
 		}
@@ -3202,7 +3204,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		CameraT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(CameraT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	 UnPackTo(CameraT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Camera> Pack(flatbuffers::FlatBufferBuilder&			_fbb,
 												const CameraT*							_o,
 												const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -3212,7 +3214,7 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_orthographic(flatbuffers::Offset<CameraOrthographic> orthographic)
+		void							add_orthographic(flatbuffers::Offset<CameraOrthographic> orthographic)
 		{
 			fbb_.AddOffset(Camera::VT_ORTHOGRAPHIC, orthographic);
 		}
@@ -3301,7 +3303,7 @@ namespace glTF_2_0
 		std::string			 name;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		ImageT() : bufferView(0)
+		ImageT() : bufferView(-1)
 		{
 		}
 	};
@@ -3356,11 +3358,11 @@ namespace glTF_2_0
 		/// property."
 		int32_t bufferView() const
 		{
-			return GetField<int32_t>(VT_BUFFERVIEW, 0);
+			return GetField<int32_t>(VT_BUFFERVIEW, -1);
 		}
 		bool mutate_bufferView(int32_t _bufferView)
 		{
-			return SetField<int32_t>(VT_BUFFERVIEW, _bufferView, 0);
+			return SetField<int32_t>(VT_BUFFERVIEW, _bufferView, -1);
 		}
 		///-- glTFChildOfRootProperty
 		/// The user-defined name of this object.
@@ -3412,7 +3414,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		ImageT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(ImageT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	UnPackTo(ImageT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Image> Pack(flatbuffers::FlatBufferBuilder&		   _fbb,
 											   const ImageT*						   _o,
 											   const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -3422,7 +3424,7 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_uri(flatbuffers::Offset<flatbuffers::String> uri)
+		void							add_uri(flatbuffers::Offset<flatbuffers::String> uri)
 		{
 			fbb_.AddOffset(Image::VT_URI, uri);
 		}
@@ -3432,7 +3434,7 @@ namespace glTF_2_0
 		}
 		void add_bufferView(int32_t bufferView)
 		{
-			fbb_.AddElement<int32_t>(Image::VT_BUFFERVIEW, bufferView, 0);
+			fbb_.AddElement<int32_t>(Image::VT_BUFFERVIEW, bufferView, -1);
 		}
 		void add_name(flatbuffers::Offset<flatbuffers::String> name)
 		{
@@ -3462,7 +3464,7 @@ namespace glTF_2_0
 	inline flatbuffers::Offset<Image> CreateImage(flatbuffers::FlatBufferBuilder&					_fbb,
 												  flatbuffers::Offset<flatbuffers::String>			uri		   = 0,
 												  flatbuffers::Offset<flatbuffers::String>			mimeType   = 0,
-												  int32_t											bufferView = 0,
+												  int32_t											bufferView = -1,
 												  flatbuffers::Offset<flatbuffers::String>			name	   = 0,
 												  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 												  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras	 = 0)
@@ -3480,7 +3482,7 @@ namespace glTF_2_0
 	inline flatbuffers::Offset<Image> CreateImageDirect(flatbuffers::FlatBufferBuilder& _fbb,
 														const char*						uri		   = nullptr,
 														const char*						mimeType   = nullptr,
-														int32_t							bufferView = 0,
+														int32_t							bufferView = -1,
 														const char*						name	   = nullptr,
 														const std::vector<uint8_t>*		extensions = nullptr,
 														const std::vector<uint8_t>*		extras	 = nullptr)
@@ -3509,7 +3511,7 @@ namespace glTF_2_0
 		int32_t				 texCoord;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		TextureInfoT() : index(0), texCoord(0)
+		TextureInfoT() : index(-1), texCoord(0)
 		{
 		}
 	};
@@ -3536,11 +3538,11 @@ namespace glTF_2_0
 		/// "description": "The index of the texture."
 		int32_t index() const
 		{
-			return GetField<int32_t>(VT_INDEX, 0);
+			return GetField<int32_t>(VT_INDEX, -1);
 		}
 		bool mutate_index(int32_t _index)
 		{
-			return SetField<int32_t>(VT_INDEX, _index, 0);
+			return SetField<int32_t>(VT_INDEX, _index, -1);
 		}
 		/// "description": "The set index of texture's TEXCOORD attribute used for texture coordinate mapping."
 		/// "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set
@@ -3591,7 +3593,7 @@ namespace glTF_2_0
 				   && verifier.EndTable();
 		}
 		TextureInfoT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(TextureInfoT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void		  UnPackTo(TextureInfoT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<TextureInfo> Pack(flatbuffers::FlatBufferBuilder&		 _fbb,
 													 const TextureInfoT*					 _o,
 													 const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -3601,9 +3603,9 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_index(int32_t index)
+		void							add_index(int32_t index)
 		{
-			fbb_.AddElement<int32_t>(TextureInfo::VT_INDEX, index, 0);
+			fbb_.AddElement<int32_t>(TextureInfo::VT_INDEX, index, -1);
 		}
 		void add_texCoord(int32_t texCoord)
 		{
@@ -3631,7 +3633,7 @@ namespace glTF_2_0
 	};
 
 	inline flatbuffers::Offset<TextureInfo> CreateTextureInfo(flatbuffers::FlatBufferBuilder& _fbb,
-															  int32_t						  index	= 0,
+															  int32_t						  index	= -1,
 															  int32_t						  texCoord = 0,
 															  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 															  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras = 0)
@@ -3645,7 +3647,7 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<TextureInfo> CreateTextureInfoDirect(flatbuffers::FlatBufferBuilder& _fbb,
-																	int32_t							index	= 0,
+																	int32_t							index	= -1,
 																	int32_t							texCoord = 0,
 																	const std::vector<uint8_t>* extensions   = nullptr,
 																	const std::vector<uint8_t>* extras		 = nullptr)
@@ -3673,7 +3675,7 @@ namespace glTF_2_0
 		int32_t				 texCoord;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		MaterialNormalTextureInfoT() : scale(1.0f), index(0), texCoord(0)
+		MaterialNormalTextureInfoT() : scale(1.0f), index(-1), texCoord(0)
 		{
 		}
 	};
@@ -3714,11 +3716,11 @@ namespace glTF_2_0
 		/// "description": "The index of the texture."
 		int32_t index() const
 		{
-			return GetField<int32_t>(VT_INDEX, 0);
+			return GetField<int32_t>(VT_INDEX, -1);
 		}
 		bool mutate_index(int32_t _index)
 		{
-			return SetField<int32_t>(VT_INDEX, _index, 0);
+			return SetField<int32_t>(VT_INDEX, _index, -1);
 		}
 		/// "description": "The set index of texture's TEXCOORD attribute used for texture coordinate mapping."
 		/// "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set
@@ -3779,13 +3781,13 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_scale(float scale)
+		void							add_scale(float scale)
 		{
 			fbb_.AddElement<float>(MaterialNormalTextureInfo::VT_SCALE, scale, 1.0f);
 		}
 		void add_index(int32_t index)
 		{
-			fbb_.AddElement<int32_t>(MaterialNormalTextureInfo::VT_INDEX, index, 0);
+			fbb_.AddElement<int32_t>(MaterialNormalTextureInfo::VT_INDEX, index, -1);
 		}
 		void add_texCoord(int32_t texCoord)
 		{
@@ -3815,7 +3817,7 @@ namespace glTF_2_0
 	inline flatbuffers::Offset<MaterialNormalTextureInfo>
 	CreateMaterialNormalTextureInfo(flatbuffers::FlatBufferBuilder&					  _fbb,
 									float											  scale		 = 1.0f,
-									int32_t											  index		 = 0,
+									int32_t											  index		 = -1,
 									int32_t											  texCoord   = 0,
 									flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 									flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras	 = 0)
@@ -3832,7 +3834,7 @@ namespace glTF_2_0
 	inline flatbuffers::Offset<MaterialNormalTextureInfo>
 	CreateMaterialNormalTextureInfoDirect(flatbuffers::FlatBufferBuilder& _fbb,
 										  float							  scale		 = 1.0f,
-										  int32_t						  index		 = 0,
+										  int32_t						  index		 = -1,
 										  int32_t						  texCoord   = 0,
 										  const std::vector<uint8_t>*	 extensions = nullptr,
 										  const std::vector<uint8_t>*	 extras	 = nullptr)
@@ -3862,7 +3864,7 @@ namespace glTF_2_0
 		int32_t				 texCoord;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		MaterialOcclusionTextureInfoT() : strength(1.0f), index(0), texCoord(0)
+		MaterialOcclusionTextureInfoT() : strength(1.0f), index(-1), texCoord(0)
 		{
 		}
 	};
@@ -3902,11 +3904,11 @@ namespace glTF_2_0
 		/// "description": "The index of the texture."
 		int32_t index() const
 		{
-			return GetField<int32_t>(VT_INDEX, 0);
+			return GetField<int32_t>(VT_INDEX, -1);
 		}
 		bool mutate_index(int32_t _index)
 		{
-			return SetField<int32_t>(VT_INDEX, _index, 0);
+			return SetField<int32_t>(VT_INDEX, _index, -1);
 		}
 		/// "description": "The set index of texture's TEXCOORD attribute used for texture coordinate mapping."
 		/// "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set
@@ -3967,13 +3969,13 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_strength(float strength)
+		void							add_strength(float strength)
 		{
 			fbb_.AddElement<float>(MaterialOcclusionTextureInfo::VT_STRENGTH, strength, 1.0f);
 		}
 		void add_index(int32_t index)
 		{
-			fbb_.AddElement<int32_t>(MaterialOcclusionTextureInfo::VT_INDEX, index, 0);
+			fbb_.AddElement<int32_t>(MaterialOcclusionTextureInfo::VT_INDEX, index, -1);
 		}
 		void add_texCoord(int32_t texCoord)
 		{
@@ -4003,7 +4005,7 @@ namespace glTF_2_0
 	inline flatbuffers::Offset<MaterialOcclusionTextureInfo>
 	CreateMaterialOcclusionTextureInfo(flatbuffers::FlatBufferBuilder&					 _fbb,
 									   float											 strength   = 1.0f,
-									   int32_t											 index		= 0,
+									   int32_t											 index		= -1,
 									   int32_t											 texCoord   = 0,
 									   flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 									   flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras		= 0)
@@ -4020,7 +4022,7 @@ namespace glTF_2_0
 	inline flatbuffers::Offset<MaterialOcclusionTextureInfo>
 	CreateMaterialOcclusionTextureInfoDirect(flatbuffers::FlatBufferBuilder& _fbb,
 											 float							 strength   = 1.0f,
-											 int32_t						 index		= 0,
+											 int32_t						 index		= -1,
 											 int32_t						 texCoord   = 0,
 											 const std::vector<uint8_t>*	 extensions = nullptr,
 											 const std::vector<uint8_t>*	 extras		= nullptr)
@@ -4484,7 +4486,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		MaterialT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(MaterialT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	   UnPackTo(MaterialT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Material> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
 												  const MaterialT*						  _o,
 												  const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -4610,6 +4612,116 @@ namespace glTF_2_0
 												 const MaterialT*						 _o,
 												 const flatbuffers::rehasher_function_t* _rehasher = nullptr);
 
+	struct MeshPrimitiveAttributeT : public flatbuffers::NativeTable
+	{
+		typedef MeshPrimitiveAttribute			 TableType;
+		static FLATBUFFERS_CONSTEXPR const char* GetFullyQualifiedName()
+		{
+			return "glTF_2_0.MeshPrimitiveAttributeT";
+		}
+		std::string id;
+		int32_t		value;
+		MeshPrimitiveAttributeT() : value(-1)
+		{
+		}
+	};
+
+	struct MeshPrimitiveAttribute FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
+	{
+		typedef MeshPrimitiveAttributeT			 NativeTableType;
+		static FLATBUFFERS_CONSTEXPR const char* GetFullyQualifiedName()
+		{
+			return "glTF_2_0.MeshPrimitiveAttribute";
+		}
+		enum
+		{
+			VT_ID	= 4,
+			VT_VALUE = 6
+		};
+		const flatbuffers::String* id() const
+		{
+			return GetPointer<const flatbuffers::String*>(VT_ID);
+		}
+		flatbuffers::String* mutable_id()
+		{
+			return GetPointer<flatbuffers::String*>(VT_ID);
+		}
+		bool KeyCompareLessThan(const MeshPrimitiveAttribute* o) const
+		{
+			return *id() < *o->id();
+		}
+		int KeyCompareWithValue(const char* val) const
+		{
+			return strcmp(id()->c_str(), val);
+		}
+		int32_t value() const
+		{
+			return GetField<int32_t>(VT_VALUE, -1);
+		}
+		bool mutate_value(int32_t _value)
+		{
+			return SetField<int32_t>(VT_VALUE, _value, -1);
+		}
+		bool Verify(flatbuffers::Verifier& verifier) const
+		{
+			return VerifyTableStart(verifier) && VerifyOffsetRequired(verifier, VT_ID) && verifier.Verify(id())
+				   && VerifyField<int32_t>(verifier, VT_VALUE) && verifier.EndTable();
+		}
+		MeshPrimitiveAttributeT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void UnPackTo(MeshPrimitiveAttributeT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		static flatbuffers::Offset<MeshPrimitiveAttribute> Pack(flatbuffers::FlatBufferBuilder&			_fbb,
+																const MeshPrimitiveAttributeT*			_o,
+																const flatbuffers::rehasher_function_t* _rehasher = nullptr);
+	};
+
+	struct MeshPrimitiveAttributeBuilder
+	{
+		flatbuffers::FlatBufferBuilder& fbb_;
+		flatbuffers::uoffset_t			start_;
+		void							add_id(flatbuffers::Offset<flatbuffers::String> id)
+		{
+			fbb_.AddOffset(MeshPrimitiveAttribute::VT_ID, id);
+		}
+		void add_value(int32_t value)
+		{
+			fbb_.AddElement<int32_t>(MeshPrimitiveAttribute::VT_VALUE, value, -1);
+		}
+		MeshPrimitiveAttributeBuilder(flatbuffers::FlatBufferBuilder& _fbb) : fbb_(_fbb)
+		{
+			start_ = fbb_.StartTable();
+		}
+		MeshPrimitiveAttributeBuilder&				operator=(const MeshPrimitiveAttributeBuilder&);
+		flatbuffers::Offset<MeshPrimitiveAttribute> Finish()
+		{
+			const auto end = fbb_.EndTable(start_, 2);
+			auto	   o   = flatbuffers::Offset<MeshPrimitiveAttribute>(end);
+			fbb_.Required(o, MeshPrimitiveAttribute::VT_ID);
+			return o;
+		}
+	};
+
+	inline flatbuffers::Offset<MeshPrimitiveAttribute> CreateMeshPrimitiveAttribute(flatbuffers::FlatBufferBuilder& _fbb,
+																					flatbuffers::Offset<flatbuffers::String> id = 0,
+																					int32_t value = -1)
+	{
+		MeshPrimitiveAttributeBuilder builder_(_fbb);
+		builder_.add_value(value);
+		builder_.add_id(id);
+		return builder_.Finish();
+	}
+
+	inline flatbuffers::Offset<MeshPrimitiveAttribute> CreateMeshPrimitiveAttributeDirect(flatbuffers::FlatBufferBuilder& _fbb,
+																						  const char* id	= nullptr,
+																						  int32_t	 value = -1)
+	{
+		return glTF_2_0::CreateMeshPrimitiveAttribute(_fbb, id ? _fbb.CreateString(id) : 0, value);
+	}
+
+	flatbuffers::Offset<MeshPrimitiveAttribute> CreateMeshPrimitiveAttribute(flatbuffers::FlatBufferBuilder& _fbb,
+																			 const MeshPrimitiveAttributeT*  _o,
+																			 const flatbuffers::rehasher_function_t* _rehasher
+																			 = nullptr);
+
 	struct MeshPrimitiveT : public flatbuffers::NativeTable
 	{
 		typedef MeshPrimitive					 TableType;
@@ -4624,7 +4736,7 @@ namespace glTF_2_0
 		std::vector<uint8_t> targets;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		MeshPrimitiveT() : indices(0), material(0), mode(MeshPrimitiveMode::TRIANGLES)
+		MeshPrimitiveT() : indices(-1), material(-1), mode(MeshPrimitiveMode::TRIANGLES)
 		{
 		}
 	};
@@ -4674,20 +4786,20 @@ namespace glTF_2_0
 		/// For triangle primitives, the front face has a counter-clockwise (CCW) winding order."
 		int32_t indices() const
 		{
-			return GetField<int32_t>(VT_INDICES, 0);
+			return GetField<int32_t>(VT_INDICES, -1);
 		}
 		bool mutate_indices(int32_t _indices)
 		{
-			return SetField<int32_t>(VT_INDICES, _indices, 0);
+			return SetField<int32_t>(VT_INDICES, _indices, -1);
 		}
 		/// "description": "The index of the material to apply to this primitive when rendering."
 		int32_t material() const
 		{
-			return GetField<int32_t>(VT_MATERIAL, 0);
+			return GetField<int32_t>(VT_MATERIAL, -1);
 		}
 		bool mutate_material(int32_t _material)
 		{
-			return SetField<int32_t>(VT_MATERIAL, _material, 0);
+			return SetField<int32_t>(VT_MATERIAL, _material, -1);
 		}
 		/// "description": "The type of primitives to render."
 		/// "gltf_detailedDescription": "The type of primitives to render. All valid values correspond to WebGL enums."
@@ -4755,7 +4867,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		MeshPrimitiveT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(MeshPrimitiveT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void			UnPackTo(MeshPrimitiveT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<MeshPrimitive> Pack(flatbuffers::FlatBufferBuilder&		   _fbb,
 													   const MeshPrimitiveT*				   _o,
 													   const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -4765,17 +4877,17 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_attributes(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> attributes)
+		void							add_attributes(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> attributes)
 		{
 			fbb_.AddOffset(MeshPrimitive::VT_ATTRIBUTES, attributes);
 		}
 		void add_indices(int32_t indices)
 		{
-			fbb_.AddElement<int32_t>(MeshPrimitive::VT_INDICES, indices, 0);
+			fbb_.AddElement<int32_t>(MeshPrimitive::VT_INDICES, indices, -1);
 		}
 		void add_material(int32_t material)
 		{
-			fbb_.AddElement<int32_t>(MeshPrimitive::VT_MATERIAL, material, 0);
+			fbb_.AddElement<int32_t>(MeshPrimitive::VT_MATERIAL, material, -1);
 		}
 		void add_mode(MeshPrimitiveMode mode)
 		{
@@ -4809,8 +4921,8 @@ namespace glTF_2_0
 
 	inline flatbuffers::Offset<MeshPrimitive> CreateMeshPrimitive(flatbuffers::FlatBufferBuilder& _fbb,
 																  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> attributes = 0,
-																  int32_t			indices  = 0,
-																  int32_t			material = 0,
+																  int32_t			indices  = -1,
+																  int32_t			material = -1,
 																  MeshPrimitiveMode mode = MeshPrimitiveMode::TRIANGLES,
 																  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> targets = 0,
 																  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
@@ -4829,8 +4941,8 @@ namespace glTF_2_0
 
 	inline flatbuffers::Offset<MeshPrimitive> CreateMeshPrimitiveDirect(flatbuffers::FlatBufferBuilder& _fbb,
 																		const std::vector<uint8_t>* attributes = nullptr,
-																		int32_t						indices	= 0,
-																		int32_t						material   = 0,
+																		int32_t						indices	= -1,
+																		int32_t						material   = -1,
 																		MeshPrimitiveMode mode = MeshPrimitiveMode::TRIANGLES,
 																		const std::vector<uint8_t>* targets = nullptr,
 																		const std::vector<uint8_t>* extensions = nullptr,
@@ -4955,7 +5067,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		MeshT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(MeshT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void   UnPackTo(MeshT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Mesh> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
 											  const MeshT*							  _o,
 											  const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -5053,7 +5165,7 @@ namespace glTF_2_0
 		std::string			 name;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		NodeT() : camera(0), skin(0), mesh(0)
+		NodeT() : camera(-1), skin(-1), mesh(-1)
 		{
 		}
 	};
@@ -5094,11 +5206,11 @@ namespace glTF_2_0
 		/// "description": "The index of the camera referenced by this node."
 		int32_t camera() const
 		{
-			return GetField<int32_t>(VT_CAMERA, 0);
+			return GetField<int32_t>(VT_CAMERA, -1);
 		}
 		bool mutate_camera(int32_t _camera)
 		{
-			return SetField<int32_t>(VT_CAMERA, _camera, 0);
+			return SetField<int32_t>(VT_CAMERA, _camera, -1);
 		}
 		/// "description": "The indices of this node's children."
 		const flatbuffers::Vector<int32_t>* children() const
@@ -5112,11 +5224,11 @@ namespace glTF_2_0
 		/// "description": "The index of the skin referenced by this node."
 		int32_t skin() const
 		{
-			return GetField<int32_t>(VT_SKIN, 0);
+			return GetField<int32_t>(VT_SKIN, -1);
 		}
 		bool mutate_skin(int32_t _skin)
 		{
-			return SetField<int32_t>(VT_SKIN, _skin, 0);
+			return SetField<int32_t>(VT_SKIN, _skin, -1);
 		}
 		/// "description": "A floating-point 4x4 transformation matrix stored in column-major order."
 		/// "gltf_detailedDescription": "A floating-point 4x4 transformation matrix stored in column-major order."
@@ -5135,11 +5247,11 @@ namespace glTF_2_0
 		/// "description": "The index of the mesh in this node."
 		int32_t mesh() const
 		{
-			return GetField<int32_t>(VT_MESH, 0);
+			return GetField<int32_t>(VT_MESH, -1);
 		}
 		bool mutate_mesh(int32_t _mesh)
 		{
-			return SetField<int32_t>(VT_MESH, _mesh, 0);
+			return SetField<int32_t>(VT_MESH, _mesh, -1);
 		}
 		/// "description": "The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar."
 		/// "minimum": -1.0
@@ -5243,7 +5355,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		NodeT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(NodeT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void   UnPackTo(NodeT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Node> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
 											  const NodeT*							  _o,
 											  const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -5253,9 +5365,9 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_camera(int32_t camera)
+		void							add_camera(int32_t camera)
 		{
-			fbb_.AddElement<int32_t>(Node::VT_CAMERA, camera, 0);
+			fbb_.AddElement<int32_t>(Node::VT_CAMERA, camera, -1);
 		}
 		void add_children(flatbuffers::Offset<flatbuffers::Vector<int32_t>> children)
 		{
@@ -5263,7 +5375,7 @@ namespace glTF_2_0
 		}
 		void add_skin(int32_t skin)
 		{
-			fbb_.AddElement<int32_t>(Node::VT_SKIN, skin, 0);
+			fbb_.AddElement<int32_t>(Node::VT_SKIN, skin, -1);
 		}
 		void add_matrix(flatbuffers::Offset<flatbuffers::Vector<float>> matrix)
 		{
@@ -5271,7 +5383,7 @@ namespace glTF_2_0
 		}
 		void add_mesh(int32_t mesh)
 		{
-			fbb_.AddElement<int32_t>(Node::VT_MESH, mesh, 0);
+			fbb_.AddElement<int32_t>(Node::VT_MESH, mesh, -1);
 		}
 		void add_rotation(flatbuffers::Offset<flatbuffers::Vector<float>> rotation)
 		{
@@ -5315,11 +5427,11 @@ namespace glTF_2_0
 	};
 
 	inline flatbuffers::Offset<Node> CreateNode(flatbuffers::FlatBufferBuilder&					  _fbb,
-												int32_t											  camera	  = 0,
+												int32_t											  camera	  = -1,
 												flatbuffers::Offset<flatbuffers::Vector<int32_t>> children	= 0,
-												int32_t											  skin		  = 0,
+												int32_t											  skin		  = -1,
 												flatbuffers::Offset<flatbuffers::Vector<float>>   matrix	  = 0,
-												int32_t											  mesh		  = 0,
+												int32_t											  mesh		  = -1,
 												flatbuffers::Offset<flatbuffers::Vector<float>>   rotation	= 0,
 												flatbuffers::Offset<flatbuffers::Vector<float>>   scale		  = 0,
 												flatbuffers::Offset<flatbuffers::Vector<float>>   translation = 0,
@@ -5345,11 +5457,11 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<Node> CreateNodeDirect(flatbuffers::FlatBufferBuilder& _fbb,
-													  int32_t						  camera	  = 0,
+													  int32_t						  camera	  = -1,
 													  const std::vector<int32_t>*	 children	= nullptr,
-													  int32_t						  skin		  = 0,
+													  int32_t						  skin		  = -1,
 													  const std::vector<float>*		  matrix	  = nullptr,
-													  int32_t						  mesh		  = 0,
+													  int32_t						  mesh		  = -1,
 													  const std::vector<float>*		  rotation	= nullptr,
 													  const std::vector<float>*		  scale		  = nullptr,
 													  const std::vector<float>*		  translation = nullptr,
@@ -5385,6 +5497,9 @@ namespace glTF_2_0
 			return "glTF_2_0.SceneT";
 		}
 		std::vector<int32_t> nodes;
+		std::string			 name;
+		std::vector<uint8_t> extensions;
+		std::vector<uint8_t> extras;
 		SceneT()
 		{
 		}
@@ -5404,7 +5519,10 @@ namespace glTF_2_0
 		}
 		enum
 		{
-			VT_NODES = 4
+			VT_NODES	  = 4,
+			VT_NAME		  = 6,
+			VT_EXTENSIONS = 8,
+			VT_EXTRAS	 = 10
 		};
 		/// "description": "The indices of each root node."
 		const flatbuffers::Vector<int32_t>* nodes() const
@@ -5415,13 +5533,56 @@ namespace glTF_2_0
 		{
 			return GetPointer<flatbuffers::Vector<int32_t>*>(VT_NODES);
 		}
+		///-- glTFChildOfRootProperty
+		/// The user-defined name of this object.
+		/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an
+		/// accessor and a buffer could have the same name, or two accessors could even have the same name.
+		const flatbuffers::String* name() const
+		{
+			return GetPointer<const flatbuffers::String*>(VT_NAME);
+		}
+		flatbuffers::String* mutable_name()
+		{
+			return GetPointer<flatbuffers::String*>(VT_NAME);
+		}
+		///-- glTFProperty
+		/// Dictionary object with extension-specific objects.
+		const flatbuffers::Vector<uint8_t>* extensions() const
+		{
+			return GetPointer<const flatbuffers::Vector<uint8_t>*>(VT_EXTENSIONS);
+		}
+		flatbuffers::Vector<uint8_t>* mutable_extensions()
+		{
+			return GetPointer<flatbuffers::Vector<uint8_t>*>(VT_EXTENSIONS);
+		}
+		flexbuffers::Reference extensions_flexbuffer_root() const
+		{
+			auto v = extensions();
+			return flexbuffers::GetRoot(v->Data(), v->size());
+		}
+		/// Application-specific data.
+		const flatbuffers::Vector<uint8_t>* extras() const
+		{
+			return GetPointer<const flatbuffers::Vector<uint8_t>*>(VT_EXTRAS);
+		}
+		flatbuffers::Vector<uint8_t>* mutable_extras()
+		{
+			return GetPointer<flatbuffers::Vector<uint8_t>*>(VT_EXTRAS);
+		}
+		flexbuffers::Reference extras_flexbuffer_root() const
+		{
+			auto v = extras();
+			return flexbuffers::GetRoot(v->Data(), v->size());
+		}
 		bool Verify(flatbuffers::Verifier& verifier) const
 		{
 			return VerifyTableStart(verifier) && VerifyOffset(verifier, VT_NODES) && verifier.Verify(nodes())
-				   && verifier.EndTable();
+				   && VerifyOffset(verifier, VT_NAME) && verifier.Verify(name())
+				   && VerifyOffset(verifier, VT_EXTENSIONS) && verifier.Verify(extensions())
+				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		SceneT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(SceneT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	UnPackTo(SceneT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Scene> Pack(flatbuffers::FlatBufferBuilder&		   _fbb,
 											   const SceneT*						   _o,
 											   const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -5431,9 +5592,21 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_nodes(flatbuffers::Offset<flatbuffers::Vector<int32_t>> nodes)
+		void							add_nodes(flatbuffers::Offset<flatbuffers::Vector<int32_t>> nodes)
 		{
 			fbb_.AddOffset(Scene::VT_NODES, nodes);
+		}
+		void add_name(flatbuffers::Offset<flatbuffers::String> name)
+		{
+			fbb_.AddOffset(Scene::VT_NAME, name);
+		}
+		void add_extensions(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions)
+		{
+			fbb_.AddOffset(Scene::VT_EXTENSIONS, extensions);
+		}
+		void add_extras(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras)
+		{
+			fbb_.AddOffset(Scene::VT_EXTRAS, extras);
 		}
 		SceneBuilder(flatbuffers::FlatBufferBuilder& _fbb) : fbb_(_fbb)
 		{
@@ -5442,23 +5615,37 @@ namespace glTF_2_0
 		SceneBuilder&			   operator=(const SceneBuilder&);
 		flatbuffers::Offset<Scene> Finish()
 		{
-			const auto end = fbb_.EndTable(start_, 1);
+			const auto end = fbb_.EndTable(start_, 4);
 			auto	   o   = flatbuffers::Offset<Scene>(end);
 			return o;
 		}
 	};
 
 	inline flatbuffers::Offset<Scene> CreateScene(flatbuffers::FlatBufferBuilder&					_fbb,
-												  flatbuffers::Offset<flatbuffers::Vector<int32_t>> nodes = 0)
+												  flatbuffers::Offset<flatbuffers::Vector<int32_t>> nodes	  = 0,
+												  flatbuffers::Offset<flatbuffers::String>			name	   = 0,
+												  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
+												  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras	 = 0)
 	{
 		SceneBuilder builder_(_fbb);
+		builder_.add_extras(extras);
+		builder_.add_extensions(extensions);
+		builder_.add_name(name);
 		builder_.add_nodes(nodes);
 		return builder_.Finish();
 	}
 
-	inline flatbuffers::Offset<Scene> CreateSceneDirect(flatbuffers::FlatBufferBuilder& _fbb, const std::vector<int32_t>* nodes = nullptr)
+	inline flatbuffers::Offset<Scene> CreateSceneDirect(flatbuffers::FlatBufferBuilder& _fbb,
+														const std::vector<int32_t>*		nodes	  = nullptr,
+														const char*						name	   = nullptr,
+														const std::vector<uint8_t>*		extensions = nullptr,
+														const std::vector<uint8_t>*		extras	 = nullptr)
 	{
-		return glTF_2_0::CreateScene(_fbb, nodes ? _fbb.CreateVector<int32_t>(*nodes) : 0);
+		return glTF_2_0::CreateScene(_fbb,
+									 nodes ? _fbb.CreateVector<int32_t>(*nodes) : 0,
+									 name ? _fbb.CreateString(name) : 0,
+									 extensions ? _fbb.CreateVector<uint8_t>(*extensions) : 0,
+									 extras ? _fbb.CreateVector<uint8_t>(*extras) : 0);
 	}
 
 	flatbuffers::Offset<Scene> CreateScene(flatbuffers::FlatBufferBuilder&		   _fbb,
@@ -5599,7 +5786,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		SamplerT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(SamplerT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	  UnPackTo(SamplerT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Sampler> Pack(flatbuffers::FlatBufferBuilder&		 _fbb,
 												 const SamplerT*						 _o,
 												 const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -5609,7 +5796,7 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_magFilter(SamplerFilter magFilter)
+		void							add_magFilter(SamplerFilter magFilter)
 		{
 			fbb_.AddElement<int32_t>(Sampler::VT_MAGFILTER, static_cast<int32_t>(magFilter), 9728);
 		}
@@ -5705,7 +5892,7 @@ namespace glTF_2_0
 		std::string			 name;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		TextureT() : sampler(0), source(0)
+		TextureT() : sampler(-1), source(-1)
 		{
 		}
 	};
@@ -5735,20 +5922,20 @@ namespace glTF_2_0
 		/// wrapping and auto filtering should be used."
 		int32_t sampler() const
 		{
-			return GetField<int32_t>(VT_SAMPLER, 0);
+			return GetField<int32_t>(VT_SAMPLER, -1);
 		}
 		bool mutate_sampler(int32_t _sampler)
 		{
-			return SetField<int32_t>(VT_SAMPLER, _sampler, 0);
+			return SetField<int32_t>(VT_SAMPLER, _sampler, -1);
 		}
 		/// "description": "The index of the image used by this texture."
 		int32_t source() const
 		{
-			return GetField<int32_t>(VT_SOURCE, 0);
+			return GetField<int32_t>(VT_SOURCE, -1);
 		}
 		bool mutate_source(int32_t _source)
 		{
-			return SetField<int32_t>(VT_SOURCE, _source, 0);
+			return SetField<int32_t>(VT_SOURCE, _source, -1);
 		}
 		///-- glTFChildOfRootProperty
 		/// The user-defined name of this object.
@@ -5799,7 +5986,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		TextureT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(TextureT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void	  UnPackTo(TextureT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Texture> Pack(flatbuffers::FlatBufferBuilder&		 _fbb,
 												 const TextureT*						 _o,
 												 const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -5809,13 +5996,13 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_sampler(int32_t sampler)
+		void							add_sampler(int32_t sampler)
 		{
-			fbb_.AddElement<int32_t>(Texture::VT_SAMPLER, sampler, 0);
+			fbb_.AddElement<int32_t>(Texture::VT_SAMPLER, sampler, -1);
 		}
 		void add_source(int32_t source)
 		{
-			fbb_.AddElement<int32_t>(Texture::VT_SOURCE, source, 0);
+			fbb_.AddElement<int32_t>(Texture::VT_SOURCE, source, -1);
 		}
 		void add_name(flatbuffers::Offset<flatbuffers::String> name)
 		{
@@ -5843,8 +6030,8 @@ namespace glTF_2_0
 	};
 
 	inline flatbuffers::Offset<Texture> CreateTexture(flatbuffers::FlatBufferBuilder&					_fbb,
-													  int32_t											sampler	= 0,
-													  int32_t											source	 = 0,
+													  int32_t											sampler	= -1,
+													  int32_t											source	 = -1,
 													  flatbuffers::Offset<flatbuffers::String>			name	   = 0,
 													  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
 													  flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extras	 = 0)
@@ -5859,8 +6046,8 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<Texture> CreateTextureDirect(flatbuffers::FlatBufferBuilder& _fbb,
-															int32_t							sampler	= 0,
-															int32_t							source	 = 0,
+															int32_t							sampler	= -1,
+															int32_t							source	 = -1,
 															const char*						name	   = nullptr,
 															const std::vector<uint8_t>*		extensions = nullptr,
 															const std::vector<uint8_t>*		extras	 = nullptr)
@@ -5890,7 +6077,7 @@ namespace glTF_2_0
 		std::string			 name;
 		std::vector<uint8_t> extensions;
 		std::vector<uint8_t> extras;
-		SkinT() : inverseBindMatrices(0), skeleton(0)
+		SkinT() : inverseBindMatrices(-1), skeleton(-1)
 		{
 		}
 	};
@@ -5921,21 +6108,21 @@ namespace glTF_2_0
 		/// pre-applied."
 		int32_t inverseBindMatrices() const
 		{
-			return GetField<int32_t>(VT_INVERSEBINDMATRICES, 0);
+			return GetField<int32_t>(VT_INVERSEBINDMATRICES, -1);
 		}
 		bool mutate_inverseBindMatrices(int32_t _inverseBindMatrices)
 		{
-			return SetField<int32_t>(VT_INVERSEBINDMATRICES, _inverseBindMatrices, 0);
+			return SetField<int32_t>(VT_INVERSEBINDMATRICES, _inverseBindMatrices, -1);
 		}
 		/// "description": "The index of the node used as a skeleton root. When undefined, joints transforms resolve to
 		/// scene root."
 		int32_t skeleton() const
 		{
-			return GetField<int32_t>(VT_SKELETON, 0);
+			return GetField<int32_t>(VT_SKELETON, -1);
 		}
 		bool mutate_skeleton(int32_t _skeleton)
 		{
-			return SetField<int32_t>(VT_SKELETON, _skeleton, 0);
+			return SetField<int32_t>(VT_SKELETON, _skeleton, -1);
 		}
 		/// "description": "Indices of skeleton nodes, used as joints in this skin."
 		/// "gltf_detailedDescription": "Indices of skeleton nodes, used as joints in this skin.  The array length must
@@ -5998,7 +6185,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		SkinT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(SkinT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void   UnPackTo(SkinT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Skin> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
 											  const SkinT*							  _o,
 											  const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -6008,13 +6195,13 @@ namespace glTF_2_0
 	{
 		flatbuffers::FlatBufferBuilder& fbb_;
 		flatbuffers::uoffset_t			start_;
-		void add_inverseBindMatrices(int32_t inverseBindMatrices)
+		void							add_inverseBindMatrices(int32_t inverseBindMatrices)
 		{
-			fbb_.AddElement<int32_t>(Skin::VT_INVERSEBINDMATRICES, inverseBindMatrices, 0);
+			fbb_.AddElement<int32_t>(Skin::VT_INVERSEBINDMATRICES, inverseBindMatrices, -1);
 		}
 		void add_skeleton(int32_t skeleton)
 		{
-			fbb_.AddElement<int32_t>(Skin::VT_SKELETON, skeleton, 0);
+			fbb_.AddElement<int32_t>(Skin::VT_SKELETON, skeleton, -1);
 		}
 		void add_joints(flatbuffers::Offset<flatbuffers::Vector<int32_t>> joints)
 		{
@@ -6047,8 +6234,8 @@ namespace glTF_2_0
 	};
 
 	inline flatbuffers::Offset<Skin> CreateSkin(flatbuffers::FlatBufferBuilder& _fbb,
-												int32_t							inverseBindMatrices			 = 0,
-												int32_t							skeleton					 = 0,
+												int32_t							inverseBindMatrices			 = -1,
+												int32_t							skeleton					 = -1,
 												flatbuffers::Offset<flatbuffers::Vector<int32_t>> joints	 = 0,
 												flatbuffers::Offset<flatbuffers::String>		  name		 = 0,
 												flatbuffers::Offset<flatbuffers::Vector<uint8_t>> extensions = 0,
@@ -6065,8 +6252,8 @@ namespace glTF_2_0
 	}
 
 	inline flatbuffers::Offset<Skin> CreateSkinDirect(flatbuffers::FlatBufferBuilder& _fbb,
-													  int32_t						  inverseBindMatrices = 0,
-													  int32_t						  skeleton			  = 0,
+													  int32_t						  inverseBindMatrices = -1,
+													  int32_t						  skeleton			  = -1,
 													  const std::vector<int32_t>*	 joints			  = nullptr,
 													  const char*					  name				  = nullptr,
 													  const std::vector<uint8_t>*	 extensions		  = nullptr,
@@ -6111,7 +6298,7 @@ namespace glTF_2_0
 		std::vector<std::unique_ptr<TextureT>>	textures;
 		std::vector<uint8_t>					  extensions;
 		std::vector<uint8_t>					  extras;
-		RootT() : scene(0)
+		RootT() : scene(-1)
 		{
 		}
 	};
@@ -6279,11 +6466,11 @@ namespace glTF_2_0
 		/// The index of the default scene.
 		int32_t scene() const
 		{
-			return GetField<int32_t>(VT_SCENE, 0);
+			return GetField<int32_t>(VT_SCENE, -1);
 		}
 		bool mutate_scene(int32_t _scene)
 		{
-			return SetField<int32_t>(VT_SCENE, _scene, 0);
+			return SetField<int32_t>(VT_SCENE, _scene, -1);
 		}
 		/// An array of scenes.
 		const flatbuffers::Vector<flatbuffers::Offset<Scene>>* scenes() const
@@ -6370,7 +6557,7 @@ namespace glTF_2_0
 				   && VerifyOffset(verifier, VT_EXTRAS) && verifier.Verify(extras()) && verifier.EndTable();
 		}
 		RootT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-		void UnPackTo(RootT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+		void   UnPackTo(RootT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 		static flatbuffers::Offset<Root> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
 											  const RootT*							  _o,
 											  const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -6434,7 +6621,7 @@ namespace glTF_2_0
 		}
 		void add_scene(int32_t scene)
 		{
-			fbb_.AddElement<int32_t>(Root::VT_SCENE, scene, 0);
+			fbb_.AddElement<int32_t>(Root::VT_SCENE, scene, -1);
 		}
 		void add_scenes(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Scene>>> scenes)
 		{
@@ -6485,7 +6672,7 @@ namespace glTF_2_0
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Mesh>>>				  meshes	  = 0,
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Node>>>				  nodes		  = 0,
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Sampler>>>			  samplers	= 0,
-			   int32_t																			  scene		  = 0,
+			   int32_t																			  scene		  = -1,
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Scene>>>				  scenes	  = 0,
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Skin>>>				  skins		  = 0,
 			   flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Texture>>>			  textures	= 0,
@@ -6530,7 +6717,7 @@ namespace glTF_2_0
 					 const std::vector<flatbuffers::Offset<Mesh>>*				  meshes			 = nullptr,
 					 const std::vector<flatbuffers::Offset<Node>>*				  nodes				 = nullptr,
 					 const std::vector<flatbuffers::Offset<Sampler>>*			  samplers			 = nullptr,
-					 int32_t													  scene				 = 0,
+					 int32_t													  scene				 = -1,
 					 const std::vector<flatbuffers::Offset<Scene>>*				  scenes			 = nullptr,
 					 const std::vector<flatbuffers::Offset<Skin>>*				  skins				 = nullptr,
 					 const std::vector<flatbuffers::Offset<Texture>>*			  textures			 = nullptr,
@@ -6623,6 +6810,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AccessorSparseIndicesT*			__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _bufferView	= _o->bufferView;
 		auto _byeOffset		= _o->byeOffset;
 		auto _componentType = _o->componentType;
@@ -6687,6 +6881,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AccessorSparseValuesT*			__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _bufferView = _o->bufferView;
 		auto _byteOffset = _o->byteOffset;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
@@ -6768,13 +6969,26 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AccessorSparseT*					__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _count   = _o->count;
-		auto _indices = _fbb.CreateVector<flatbuffers::Offset<AccessorSparseIndices>>(_o->indices.size(), [&](size_t i) {
-			return CreateAccessorSparseIndices(_fbb, _o->indices[i].get(), _rehasher);
-		});
-		auto _values = _fbb.CreateVector<flatbuffers::Offset<AccessorSparseValues>>(_o->values.size(), [&](size_t i) {
-			return CreateAccessorSparseValues(_fbb, _o->values[i].get(), _rehasher);
-		});
+		auto _indices = _fbb.CreateVector<flatbuffers::Offset<AccessorSparseIndices>>(
+		  _o->indices.size(),
+		  [](size_t i, _VectorArgs* __va) {
+			  return CreateAccessorSparseIndices(*__va->__fbb, __va->__o->indices[i].get(), __va->__rehasher);
+		  },
+		  &_va);
+		auto _values = _fbb.CreateVector<flatbuffers::Offset<AccessorSparseValues>>(
+		  _o->values.size(),
+		  [](size_t i, _VectorArgs* __va) {
+			  return CreateAccessorSparseValues(*__va->__fbb, __va->__o->values[i].get(), __va->__rehasher);
+		  },
+		  &_va);
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
 		auto _extras	 = _o->extras.size() ? _fbb.CreateVector(_o->extras) : 0;
 		return glTF_2_0::CreateAccessorSparse(_fbb, _count, _indices, _values, _extensions, _extras);
@@ -6890,6 +7104,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AccessorT*						__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _bufferView	= _o->bufferView;
 		auto _byteOffset	= _o->byteOffset;
 		auto _componentType = _o->componentType;
@@ -6898,11 +7119,14 @@ namespace glTF_2_0
 		auto _type			= _o->type;
 		auto _max			= _o->max.size() ? _fbb.CreateVector(_o->max) : 0;
 		auto _min			= _o->min.size() ? _fbb.CreateVector(_o->min) : 0;
-		auto _sparse
-		  = _o->sparse.size() ?
-			  _fbb.CreateVector<flatbuffers::Offset<AccessorSparse>>(
-				_o->sparse.size(), [&](size_t i) { return CreateAccessorSparse(_fbb, _o->sparse[i].get(), _rehasher); }) :
-			  0;
+		auto _sparse		= _o->sparse.size() ?
+						 _fbb.CreateVector<flatbuffers::Offset<AccessorSparse>>(
+						   _o->sparse.size(),
+						   [](size_t i, _VectorArgs* __va) {
+							   return CreateAccessorSparse(*__va->__fbb, __va->__o->sparse[i].get(), __va->__rehasher);
+						   },
+						   &_va) :
+						 0;
 		auto _name		 = _o->name.size() ? _fbb.CreateString(_o->name) : 0;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
 		auto _extras	 = _o->extras.size() ? _fbb.CreateVector(_o->extras) : 0;
@@ -6983,6 +7207,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AssetT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _copyright  = _o->copyright.size() ? _fbb.CreateString(_o->copyright) : 0;
 		auto _generator  = _o->generator.size() ? _fbb.CreateString(_o->generator) : 0;
 		auto _version	= _fbb.CreateString(_o->version);
@@ -7049,6 +7280,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AnimationChannelTargetT*			__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _node		 = _o->node;
 		auto _path		 = _o->path;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
@@ -7113,6 +7351,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AnimationChannelT*				__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _sampler	= _o->sampler;
 		auto _target	 = _o->target ? CreateAnimationChannelTarget(_fbb, _o->target.get(), _rehasher) : 0;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
@@ -7180,6 +7425,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AnimationSamplerT*				__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _input			= _o->input;
 		auto _interpolation = _o->interpolation;
 		auto _output		= _o->output;
@@ -7263,12 +7515,25 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
-		auto _channels = _fbb.CreateVector<flatbuffers::Offset<AnimationChannel>>(_o->channels.size(), [&](size_t i) {
-			return CreateAnimationChannel(_fbb, _o->channels[i].get(), _rehasher);
-		});
-		auto _samplers = _fbb.CreateVector<flatbuffers::Offset<AnimationSampler>>(_o->samplers.size(), [&](size_t i) {
-			return CreateAnimationSampler(_fbb, _o->samplers[i].get(), _rehasher);
-		});
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const AnimationT*						__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
+		auto _channels = _fbb.CreateVector<flatbuffers::Offset<AnimationChannel>>(
+		  _o->channels.size(),
+		  [](size_t i, _VectorArgs* __va) {
+			  return CreateAnimationChannel(*__va->__fbb, __va->__o->channels[i].get(), __va->__rehasher);
+		  },
+		  &_va);
+		auto _samplers = _fbb.CreateVector<flatbuffers::Offset<AnimationSampler>>(
+		  _o->samplers.size(),
+		  [](size_t i, _VectorArgs* __va) {
+			  return CreateAnimationSampler(*__va->__fbb, __va->__o->samplers[i].get(), __va->__rehasher);
+		  },
+		  &_va);
 		auto _name		 = _o->name.size() ? _fbb.CreateString(_o->name) : 0;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
 		auto _extras	 = _o->extras.size() ? _fbb.CreateVector(_o->extras) : 0;
@@ -7337,6 +7602,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const BufferT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _uri		 = _o->uri.size() ? _fbb.CreateString(_o->uri) : 0;
 		auto _byteLength = _o->byteLength;
 		auto _name		 = _o->name.size() ? _fbb.CreateString(_o->name) : 0;
@@ -7418,6 +7690,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const BufferViewT*						__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _buffer	 = _o->buffer;
 		auto _byteOffset = _o->byteOffset;
 		auto _byteLength = _o->byteLength;
@@ -7493,6 +7772,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const CameraOrthographicT*				__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _xmag		 = _o->xmag;
 		auto _ymag		 = _o->ymag;
 		auto _zfar		 = _o->zfar;
@@ -7566,6 +7852,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const CameraPerspectiveT*				__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _aspectRatio = _o->aspectRatio;
 		auto _yfov		  = _o->yfov;
 		auto _zfar		  = _o->zfar;
@@ -7642,6 +7935,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const CameraT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _orthographic = _o->orthographic ? CreateCameraOrthographic(_fbb, _o->orthographic.get(), _rehasher) : 0;
 		auto _perspective  = _o->perspective ? CreateCameraPerspective(_fbb, _o->perspective.get(), _rehasher) : 0;
 		auto _type		   = _o->type;
@@ -7718,6 +8018,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const ImageT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _uri		 = _o->uri.size() ? _fbb.CreateString(_o->uri) : 0;
 		auto _mimeType   = _o->mimeType.size() ? _fbb.CreateString(_o->mimeType) : 0;
 		auto _bufferView = _o->bufferView;
@@ -7783,6 +8090,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const TextureInfoT*						__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _index		 = _o->index;
 		auto _texCoord   = _o->texCoord;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
@@ -7848,6 +8162,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const MaterialNormalTextureInfoT*		__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _scale		 = _o->scale;
 		auto _index		 = _o->index;
 		auto _texCoord   = _o->texCoord;
@@ -7915,6 +8236,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const MaterialOcclusionTextureInfoT*	__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _strength   = _o->strength;
 		auto _index		 = _o->index;
 		auto _texCoord   = _o->texCoord;
@@ -7999,6 +8327,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const MaterialPbrMetallicRoughnessT*	__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _baseColorFactor = _o->baseColorFactor.size() ? _fbb.CreateVector(_o->baseColorFactor) : 0;
 		auto _baseColorTexture = _o->baseColorTexture ? CreateTextureInfo(_fbb, _o->baseColorTexture.get(), _rehasher) : 0;
 		auto _metallicFactor  = _o->metallicFactor;
@@ -8107,6 +8442,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const MaterialT*						__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _pbrMetallicRoughness
 		  = _o->pbrMetallicRoughness ? CreateMaterialPbrMetallicRoughness(_fbb, _o->pbrMetallicRoughness.get(), _rehasher) : 0;
 		auto _normalTexture = _o->normalTexture ? CreateMaterialNormalTextureInfo(_fbb, _o->normalTexture.get(), _rehasher) : 0;
@@ -8132,6 +8474,53 @@ namespace glTF_2_0
 										_name,
 										_extensions,
 										_extras);
+	}
+
+	inline MeshPrimitiveAttributeT* MeshPrimitiveAttribute::UnPack(const flatbuffers::resolver_function_t* _resolver) const
+	{
+		auto _o = new MeshPrimitiveAttributeT();
+		UnPackTo(_o, _resolver);
+		return _o;
+	}
+
+	inline void MeshPrimitiveAttribute::UnPackTo(MeshPrimitiveAttributeT* _o, const flatbuffers::resolver_function_t* _resolver) const
+	{
+		(void)_o;
+		(void)_resolver;
+		{
+			auto _e = id();
+			if (_e)
+				_o->id = _e->str();
+		};
+		{
+			auto _e   = value();
+			_o->value = _e;
+		};
+	}
+
+	inline flatbuffers::Offset<MeshPrimitiveAttribute> MeshPrimitiveAttribute::Pack(flatbuffers::FlatBufferBuilder& _fbb,
+																					const MeshPrimitiveAttributeT*  _o,
+																					const flatbuffers::rehasher_function_t* _rehasher)
+	{
+		return CreateMeshPrimitiveAttribute(_fbb, _o, _rehasher);
+	}
+
+	inline flatbuffers::Offset<MeshPrimitiveAttribute> CreateMeshPrimitiveAttribute(flatbuffers::FlatBufferBuilder& _fbb,
+																					const MeshPrimitiveAttributeT*  _o,
+																					const flatbuffers::rehasher_function_t* _rehasher)
+	{
+		(void)_rehasher;
+		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const MeshPrimitiveAttributeT*			__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
+		auto _id	= _fbb.CreateString(_o->id);
+		auto _value = _o->value;
+		return glTF_2_0::CreateMeshPrimitiveAttribute(_fbb, _id, _value);
 	}
 
 	inline MeshPrimitiveT* MeshPrimitive::UnPack(const flatbuffers::resolver_function_t* _resolver) const
@@ -8216,6 +8605,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const MeshPrimitiveT*					__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _attributes = _fbb.CreateVector(_o->attributes);
 		auto _indices	= _o->indices;
 		auto _material   = _o->material;
@@ -8301,9 +8697,19 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
-		auto _primitives = _fbb.CreateVector<flatbuffers::Offset<MeshPrimitive>>(_o->primitives.size(), [&](size_t i) {
-			return CreateMeshPrimitive(_fbb, _o->primitives[i].get(), _rehasher);
-		});
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const MeshT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
+		auto _primitives = _fbb.CreateVector<flatbuffers::Offset<MeshPrimitive>>(
+		  _o->primitives.size(),
+		  [](size_t i, _VectorArgs* __va) {
+			  return CreateMeshPrimitive(*__va->__fbb, __va->__o->primitives[i].get(), __va->__rehasher);
+		  },
+		  &_va);
 		auto _weights	= _o->weights.size() ? _fbb.CreateVector(_o->weights) : 0;
 		auto _name		 = _o->name.size() ? _fbb.CreateString(_o->name) : 0;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
@@ -8442,6 +8848,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const NodeT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _camera	  = _o->camera;
 		auto _children	= _o->children.size() ? _fbb.CreateVector(_o->children) : 0;
 		auto _skin		  = _o->skin;
@@ -8480,6 +8893,33 @@ namespace glTF_2_0
 				}
 			}
 		};
+		{
+			auto _e = name();
+			if (_e)
+				_o->name = _e->str();
+		};
+		{
+			auto _e = extensions();
+			if (_e)
+			{
+				_o->extensions.resize(_e->size());
+				for (flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++)
+				{
+					_o->extensions[_i] = _e->Get(_i);
+				}
+			}
+		};
+		{
+			auto _e = extras();
+			if (_e)
+			{
+				_o->extras.resize(_e->size());
+				for (flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++)
+				{
+					_o->extras[_i] = _e->Get(_i);
+				}
+			}
+		};
 	}
 
 	inline flatbuffers::Offset<Scene> Scene::Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
@@ -8495,8 +8935,18 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
-		auto _nodes = _o->nodes.size() ? _fbb.CreateVector(_o->nodes) : 0;
-		return glTF_2_0::CreateScene(_fbb, _nodes);
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const SceneT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
+		auto _nodes		 = _o->nodes.size() ? _fbb.CreateVector(_o->nodes) : 0;
+		auto _name		 = _o->name.size() ? _fbb.CreateString(_o->name) : 0;
+		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
+		auto _extras	 = _o->extras.size() ? _fbb.CreateVector(_o->extras) : 0;
+		return glTF_2_0::CreateScene(_fbb, _nodes, _name, _extensions, _extras);
 	}
 
 	inline SamplerT* Sampler::UnPack(const flatbuffers::resolver_function_t* _resolver) const
@@ -8568,6 +9018,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const SamplerT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _magFilter  = _o->magFilter;
 		auto _minFilter  = _o->minFilter;
 		auto _wrapS		 = _o->wrapS;
@@ -8639,6 +9096,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const TextureT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _sampler	= _o->sampler;
 		auto _source	 = _o->source;
 		auto _name		 = _o->name.size() ? _fbb.CreateString(_o->name) : 0;
@@ -8719,6 +9183,13 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const SkinT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _inverseBindMatrices = _o->inverseBindMatrices;
 		auto _skeleton			  = _o->skeleton;
 		auto _joints			  = _fbb.CreateVector(_o->joints);
@@ -8950,83 +9421,139 @@ namespace glTF_2_0
 	{
 		(void)_rehasher;
 		(void)_o;
+		struct _VectorArgs
+		{
+			flatbuffers::FlatBufferBuilder*			__fbb;
+			const RootT*							__o;
+			const flatbuffers::rehasher_function_t* __rehasher;
+		} _va = {&_fbb, _o, _rehasher};
+		(void)_va;
 		auto _extensionsUsed	 = _o->extensionsUsed.size() ? _fbb.CreateVectorOfStrings(_o->extensionsUsed) : 0;
 		auto _extensionsRequired = _o->extensionsRequired.size() ? _fbb.CreateVectorOfStrings(_o->extensionsRequired) : 0;
 		auto _accessors
 		  = _o->accessors.size() ?
-			  _fbb.CreateVector<flatbuffers::Offset<Accessor>>(
-				_o->accessors.size(), [&](size_t i) { return CreateAccessor(_fbb, _o->accessors[i].get(), _rehasher); }) :
+			  _fbb.CreateVector<flatbuffers::Offset<Accessor>>(_o->accessors.size(),
+															   [](size_t i, _VectorArgs* __va) {
+																   return CreateAccessor(*__va->__fbb,
+																						 __va->__o->accessors[i].get(),
+																						 __va->__rehasher);
+															   },
+															   &_va) :
 			  0;
 		auto _animations
 		  = _o->animations.size() ?
 			  _fbb.CreateVector<flatbuffers::Offset<Animation>>(_o->animations.size(),
-																[&](size_t i) {
-																	return CreateAnimation(_fbb, _o->animations[i].get(), _rehasher);
-																}) :
+																[](size_t i, _VectorArgs* __va) {
+																	return CreateAnimation(*__va->__fbb,
+																						   __va->__o->animations[i].get(),
+																						   __va->__rehasher);
+																},
+																&_va) :
 			  0;
-		auto _asset = _o->asset ? CreateAsset(_fbb, _o->asset.get(), _rehasher) : 0;
-		auto _buffers
-		  = _o->buffers.size() ?
-			  _fbb.CreateVector<flatbuffers::Offset<Buffer>>(_o->buffers.size(),
-															 [&](size_t i) {
-																 return CreateBuffer(_fbb, _o->buffers[i].get(), _rehasher);
-															 }) :
+		auto _asset   = _o->asset ? CreateAsset(_fbb, _o->asset.get(), _rehasher) : 0;
+		auto _buffers = _o->buffers.size() ?
+						  _fbb.CreateVector<flatbuffers::Offset<Buffer>>(_o->buffers.size(),
+																		 [](size_t i, _VectorArgs* __va) {
+																			 return CreateBuffer(*__va->__fbb,
+																								 __va->__o->buffers[i].get(),
+																								 __va->__rehasher);
+																		 },
+																		 &_va) :
+						  0;
+		auto _bufferViews
+		  = _o->bufferViews.size() ?
+			  _fbb.CreateVector<flatbuffers::Offset<BufferView>>(_o->bufferViews.size(),
+																 [](size_t i, _VectorArgs* __va) {
+																	 return CreateBufferView(*__va->__fbb,
+																							 __va->__o->bufferViews[i].get(),
+																							 __va->__rehasher);
+																 },
+																 &_va) :
 			  0;
-		auto _bufferViews = _o->bufferViews.size() ?
-							  _fbb.CreateVector<flatbuffers::Offset<BufferView>>(
-								_o->bufferViews.size(),
-								[&](size_t i) { return CreateBufferView(_fbb, _o->bufferViews[i].get(), _rehasher); }) :
-							  0;
-		auto _cameras
-		  = _o->cameras.size() ?
-			  _fbb.CreateVector<flatbuffers::Offset<Camera>>(_o->cameras.size(),
-															 [&](size_t i) {
-																 return CreateCamera(_fbb, _o->cameras[i].get(), _rehasher);
-															 }) :
-			  0;
+		auto _cameras = _o->cameras.size() ?
+						  _fbb.CreateVector<flatbuffers::Offset<Camera>>(_o->cameras.size(),
+																		 [](size_t i, _VectorArgs* __va) {
+																			 return CreateCamera(*__va->__fbb,
+																								 __va->__o->cameras[i].get(),
+																								 __va->__rehasher);
+																		 },
+																		 &_va) :
+						  0;
 		auto _images = _o->images.size() ?
-						 _fbb.CreateVector<flatbuffers::Offset<Image>>(
-						   _o->images.size(), [&](size_t i) { return CreateImage(_fbb, _o->images[i].get(), _rehasher); }) :
+						 _fbb.CreateVector<flatbuffers::Offset<Image>>(_o->images.size(),
+																	   [](size_t i, _VectorArgs* __va) {
+																		   return CreateImage(*__va->__fbb,
+																							  __va->__o->images[i].get(),
+																							  __va->__rehasher);
+																	   },
+																	   &_va) :
 						 0;
 		auto _materials
 		  = _o->materials.size() ?
-			  _fbb.CreateVector<flatbuffers::Offset<Material>>(
-				_o->materials.size(), [&](size_t i) { return CreateMaterial(_fbb, _o->materials[i].get(), _rehasher); }) :
+			  _fbb.CreateVector<flatbuffers::Offset<Material>>(_o->materials.size(),
+															   [](size_t i, _VectorArgs* __va) {
+																   return CreateMaterial(*__va->__fbb,
+																						 __va->__o->materials[i].get(),
+																						 __va->__rehasher);
+															   },
+															   &_va) :
 			  0;
 		auto _meshes = _o->meshes.size() ?
-						 _fbb.CreateVector<flatbuffers::Offset<Mesh>>(
-						   _o->meshes.size(), [&](size_t i) { return CreateMesh(_fbb, _o->meshes[i].get(), _rehasher); }) :
+						 _fbb.CreateVector<flatbuffers::Offset<Mesh>>(_o->meshes.size(),
+																	  [](size_t i, _VectorArgs* __va) {
+																		  return CreateMesh(*__va->__fbb,
+																							__va->__o->meshes[i].get(),
+																							__va->__rehasher);
+																	  },
+																	  &_va) :
 						 0;
 		auto _nodes = _o->nodes.size() ?
 						_fbb.CreateVector<flatbuffers::Offset<Node>>(_o->nodes.size(),
-																	 [&](size_t i) {
-																		 return CreateNode(_fbb, _o->nodes[i].get(), _rehasher);
-																	 }) :
+																	 [](size_t i, _VectorArgs* __va) {
+																		 return CreateNode(*__va->__fbb,
+																						   __va->__o->nodes[i].get(),
+																						   __va->__rehasher);
+																	 },
+																	 &_va) :
 						0;
 		auto _samplers
 		  = _o->samplers.size() ?
 			  _fbb.CreateVector<flatbuffers::Offset<Sampler>>(_o->samplers.size(),
-															  [&](size_t i) {
-																  return CreateSampler(_fbb, _o->samplers[i].get(), _rehasher);
-															  }) :
+															  [](size_t i, _VectorArgs* __va) {
+																  return CreateSampler(*__va->__fbb,
+																					   __va->__o->samplers[i].get(),
+																					   __va->__rehasher);
+															  },
+															  &_va) :
 			  0;
 		auto _scene  = _o->scene;
 		auto _scenes = _o->scenes.size() ?
-						 _fbb.CreateVector<flatbuffers::Offset<Scene>>(
-						   _o->scenes.size(), [&](size_t i) { return CreateScene(_fbb, _o->scenes[i].get(), _rehasher); }) :
+						 _fbb.CreateVector<flatbuffers::Offset<Scene>>(_o->scenes.size(),
+																	   [](size_t i, _VectorArgs* __va) {
+																		   return CreateScene(*__va->__fbb,
+																							  __va->__o->scenes[i].get(),
+																							  __va->__rehasher);
+																	   },
+																	   &_va) :
 						 0;
 		auto _skins = _o->skins.size() ?
 						_fbb.CreateVector<flatbuffers::Offset<Skin>>(_o->skins.size(),
-																	 [&](size_t i) {
-																		 return CreateSkin(_fbb, _o->skins[i].get(), _rehasher);
-																	 }) :
+																	 [](size_t i, _VectorArgs* __va) {
+																		 return CreateSkin(*__va->__fbb,
+																						   __va->__o->skins[i].get(),
+																						   __va->__rehasher);
+																	 },
+																	 &_va) :
 						0;
 		auto _textures
 		  = _o->textures.size() ?
 			  _fbb.CreateVector<flatbuffers::Offset<Texture>>(_o->textures.size(),
-															  [&](size_t i) {
-																  return CreateTexture(_fbb, _o->textures[i].get(), _rehasher);
-															  }) :
+															  [](size_t i, _VectorArgs* __va) {
+																  return CreateTexture(*__va->__fbb,
+																					   __va->__o->textures[i].get(),
+																					   __va->__rehasher);
+															  },
+															  &_va) :
 			  0;
 		auto _extensions = _o->extensions.size() ? _fbb.CreateVector(_o->extensions) : 0;
 		auto _extras	 = _o->extras.size() ? _fbb.CreateVector(_o->extras) : 0;

@@ -46,7 +46,7 @@ struct glTF FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
 		return VerifyTableStart(verifier) && VerifyField<int32_t>(verifier, VT_FOOBAR) && verifier.EndTable();
 	}
 	glTFT* UnPack(const flatbuffers::resolver_function_t* _resolver = nullptr) const;
-	void UnPackTo(glTFT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
+	void   UnPackTo(glTFT* _o, const flatbuffers::resolver_function_t* _resolver = nullptr) const;
 	static flatbuffers::Offset<glTF> Pack(flatbuffers::FlatBufferBuilder&		  _fbb,
 										  const glTFT*							  _o,
 										  const flatbuffers::rehasher_function_t* _rehasher = nullptr);
@@ -56,7 +56,7 @@ struct glTFBuilder
 {
 	flatbuffers::FlatBufferBuilder& fbb_;
 	flatbuffers::uoffset_t			start_;
-	void add_foobar(int32_t foobar)
+	void							add_foobar(int32_t foobar)
 	{
 		fbb_.AddElement<int32_t>(glTF::VT_FOOBAR, foobar, 0);
 	}
@@ -110,6 +110,13 @@ inline flatbuffers::Offset<glTF> CreateglTF(flatbuffers::FlatBufferBuilder& _fbb
 {
 	(void)_rehasher;
 	(void)_o;
+	struct _VectorArgs
+	{
+		flatbuffers::FlatBufferBuilder*			__fbb;
+		const glTFT*							__o;
+		const flatbuffers::rehasher_function_t* __rehasher;
+	} _va = {&_fbb, _o, _rehasher};
+	(void)_va;
 	auto _foobar = _o->foobar;
 	return CreateglTF(_fbb, _foobar);
 }

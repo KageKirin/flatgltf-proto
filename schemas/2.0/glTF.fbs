@@ -28,6 +28,7 @@ enum AccessorType: short { //string
 	MAT2,
 	MAT3,
 	MAT4,
+	__UNSET,
 }
 
 ///-- accessor.sparse.indices.schema.json
@@ -38,7 +39,7 @@ table AccessorSparseIndices {
 	/// "description": "The offset relative to the start of the bufferView in bytes. Must be aligned."
 	byeOffset: int  = 0; //uint
 
-	componentType: int = -1;	//ComponentType = BYTE;
+	componentType: int = -1;	//ComponentType = UNSIGNED_BYTE;
 
 	///-- glTFProperty
 	/// Dictionary object with extension-specific objects.
@@ -121,7 +122,7 @@ table Accessor
 	count: int = 1; //uint 
 
 	/// "description": "Specifies if the attribute is a scalar, vector, or matrix."
-	type: AccessorType;
+	type: AccessorType = __UNSET;
 	
 	///  "description": "Maximum value of each component in this attribute."
 	/// "minItems": 1,
@@ -323,7 +324,7 @@ table Buffer {
 	uri: string;
 
 	/// "description": "The length of the buffer in bytes."
-	byteLength: int; //uint
+	byteLength: int = 0; //uint
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.

@@ -15,6 +15,37 @@ flatgltf_defines = {}
 
 if generate_thirdparty_projects and generate_thirdparty_projects == true then
 
+project "flatgltf_common"
+	kind "StaticLib"
+	language "C++"
+	flags {}
+
+	includedirs {
+		flatgltf_includedirs,
+		flatbuffers_includedirs,
+		glm_includedirs,
+		khutils_includedirs,
+		bandit_includedirs,
+	}
+
+	defines {
+	}
+
+	files {
+		path.join(flatgltf_root, "include", "flatgltf/common", "**.h"),
+		path.join(flatgltf_root, "include", "flatgltf/common", "**.hpp"),
+		path.join(flatgltf_root, "include", "flatgltf/common", "**.hxx"),
+		path.join(flatgltf_root, "schemas/common", "**.fbs"),
+		path.join(flatgltf_root, "src/common", "**.cpp"),
+		path.join(flatgltf_root, "src/common", "**.cxx"),
+	}
+
+	links {
+		"flatbuffers",
+	}
+
+build_cppfwd("flatgltf_common")
+
 project "flatgltf_1_0"
 	kind "StaticLib"
 	language "C++"
@@ -23,6 +54,9 @@ project "flatgltf_1_0"
 	includedirs {
 		flatgltf_includedirs,
 		flatbuffers_includedirs,
+		glm_includedirs,
+		khutils_includedirs,
+		bandit_includedirs,
 	}
 
 	defines {
@@ -39,6 +73,7 @@ project "flatgltf_1_0"
 
 	links {
 		"flatbuffers",
+		"flatgltf_common",
 	}
 
 build_cppfwd("flatgltf_1_0")
@@ -53,6 +88,9 @@ project "flatgltf_2_0"
 	includedirs {
 		flatgltf_includedirs,
 		flatbuffers_includedirs,
+		glm_includedirs,
+		khutils_includedirs,
+		bandit_includedirs,
 	}
 
 	defines {
@@ -69,6 +107,7 @@ project "flatgltf_2_0"
 
 	links {
 		"flatbuffers",
+		"flatgltf_common",
 	}
 
 build_cppfwd("flatgltf_2_0")

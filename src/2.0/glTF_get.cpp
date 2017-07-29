@@ -1,262 +1,268 @@
 #include "flatgltf/2.0/glTF_api.h"
 #include "flatgltf/2.0/glTF_generated.h"
-
+#include "flatgltf/common/glTF_utils.h"
 #include "glTF_internal_types.h"
+
+#define KHUTILS_ASSERTION_INLINE
+
+#include "khutils/assertion.hpp"
+#include "khutils/runtime_exceptions.hpp"
+
+#include <algorithm>
+#include <vector>
 
 namespace glTF_2_0
 {
-	using namespace detail;
+	using namespace glTF_common;
+
+	///-----------------------------------------------------------------------
+	/// bindata
+	///-----------------------------------------------------------------------
+
+	std::vector<uint8_t>& get_Bindata(glTF_Document* const doc, const char* name)
+	{
+		return doc->bindata[name];
+	}
+
+	size_t set_Bindata(const std::vector<uint8_t>& data, glTF_Document* const doc, const char* name)
+	{
+		doc->bindata[name].clear();
+		doc->bindata[name].reserve(data.size());
+		std::copy(data.begin(), data.end(), std::back_inserter(doc->bindata[name]));
+		return doc->bindata[name].size();
+	}
+
+	size_t add_Bindata(const std::vector<uint8_t>& data, glTF_Document* const doc, const char* name)
+	{
+		doc->bindata[name].reserve(doc->bindata[name].size() + data.size());
+		std::copy(data.begin(), data.end(), std::back_inserter(doc->bindata[name]));
+		return doc->bindata[name].size();
+	}
+
+
+	size_t add_BufferData(const uint8_t* const data, size_t length, glTF_Document* const doc, BufferT* const buf)
+	{
+		KHUTILS_ASSERT_PTR(data);
+		KHUTILS_ASSERT_PTR(doc);
+		KHUTILS_ASSERT_PTR(buf);
+
+		if (is_DataUri(buf->uri))
+		{
+			auto bufData = convert_UriToData(buf->uri);
+			std::copy_n(data, length, std::back_inserter(bufData));
+			buf->uri		= convert_DataToUri(bufData);
+			buf->byteLength = bufData.size();
+		}
+		else
+		{
+			auto& bufData = get_Bindata(doc, buf->uri.c_str());
+			std::copy_n(data, length, std::back_inserter(bufData));
+			buf->byteLength = bufData.size();
+		}
+		return buf->byteLength;
+	}
+
+
+	size_t set_BufferViewData(const uint8_t* const data, size_t length, glTF_Document* const doc, BufferViewT* const view)
+	{
+		KHUTILS_ASSERT_PTR(data);
+		KHUTILS_ASSERT_PTR(doc);
+		KHUTILS_ASSERT_PTR(view);
+		KHUTILS_ASSERT_LESSEREQ(view->byteLength, 0);
+
+		auto buf = get_Buffer(doc, view->buffer);
+		KHUTILS_ASSERT_PTR(buf);
+
+		view->byteOffset = buf->byteLength;
+		add_BufferData(data, length, doc, buf);
+
+		view->byteLength = length;
+		view->byteStride = 0;
+		view->target	 = static_cast<int32_t>(BufferViewTarget::ARRAY_BUFFER);
+		return view->byteLength;
+	}
+
 
 	///-----------------------------------------------------------------------
 	/// simple get for unique elements
 	///-----------------------------------------------------------------------
 
-	AssetT const* get_Asset(glTF_Object* const obj)
+	AssetT* const get_Asset(const glTF_Document* const doc)
 	{
-		return (obj && obj->root) ? obj->root->asset.get() : nullptr;
+		return (doc && doc->root) ? doc->root->asset.get() : nullptr;
 	}
 
-	SceneT const* get_Scene(glTF_Object* const obj)
+	SceneT* const get_Scene(const glTF_Document* const doc)
 	{
-		return (obj && obj->root) ? get_Scene(obj, obj->root->scene) : nullptr;
+		return (doc && doc->root) ? get_Scene(doc, doc->root->scene) : nullptr;
 	}
 
 	///-----------------------------------------------------------------------
 	/// get-by-id
 	///-----------------------------------------------------------------------
 
-	AccessorT const* get_Accessor(glTF_Object* const obj, glTFId_t id)
+	AccessorT* const get_Accessor(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->accessors.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->accessors.size())
+				return doc->root->accessors[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	AnimationT const* get_Animation(glTF_Object* const obj, glTFId_t id)
+	AnimationT* const get_Animation(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->animations.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->animations.size())
+				return doc->root->animations[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	BufferT const* get_Buffer(glTF_Object* const obj, glTFId_t id)
+	BufferT* const get_Buffer(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->buffers.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->buffers.size())
+				return doc->root->buffers[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	BufferViewT const* get_BufferView(glTF_Object* const obj, glTFId_t id)
+	BufferViewT* const get_BufferView(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->bufferviews.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->bufferViews.size())
+				return doc->root->bufferViews[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	CameraT const* get_Camera(glTF_Object* const obj, glTFId_t id)
+	CameraT* const get_Camera(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->cameras.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->cameras.size())
+				return doc->root->cameras[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	ImageT const* get_Image(glTF_Object* const obj, glTFId_t id)
+	ImageT* const get_Image(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->images.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->images.size())
+				return doc->root->images[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	MaterialT const* get_Material(glTF_Object* const obj, glTFId_t id)
+	MaterialT* const get_Material(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->materials.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->materials.size())
+				return doc->root->materials[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	MeshPrimitiveT const* get_MeshPrimitive(glTF_Object* const obj, glTFId_t id)
+	// MeshPrimitiveT *const get_MeshPrimitive(const glTF_Document* const doc, glTFid_t id)
+	//{
+	//	if (doc && doc->root)
+	//	{
+	//		if (id >= 0 && id < doc->root->meshprimitives.size())
+	//			return doc->root->meshprimitives[id].get();
+	//	}
+	//	return nullptr;
+	//}
+
+	//---
+
+	MeshT* const get_Mesh(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->meshprimitives.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->meshes.size())
+				return doc->root->meshes[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	MeshT const* get_Mesh(glTF_Object* const obj, glTFId_t id)
+	NodeT* const get_Node(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->meshs.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->nodes.size())
+				return doc->root->nodes[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	NodeT const* get_Node(glTF_Object* const obj, glTFId_t id)
+	SceneT* const get_Scene(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->nodes.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->scenes.size())
+				return doc->root->scenes[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	SceneT const* get_Scene(glTF_Object* const obj, glTFId_t id)
+	SamplerT* const get_Sampler(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->scenes.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->samplers.size())
+				return doc->root->samplers[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	SamplerT const* get_Sampler(glTF_Object* const obj, glTFId_t id)
+	TextureT* const get_Texture(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->samplers.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->textures.size())
+				return doc->root->textures[id].get();
 		}
 		return nullptr;
 	}
 
 	//---
 
-	TextureT const* get_Texture(glTF_Object* const obj, glTFId_t id)
+	SkinT* const get_Skin(const glTF_Document* const doc, glTFid_t id)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			try
-			{
-				return obj->root->textures.at(id).get();
-			}
-			catch (...)
-			{
-			}
-		}
-		return nullptr;
-	}
-
-	//---
-
-	SkinT const* get_Skin(glTF_Object* const obj, glTFId_t id)
-	{
-		if (obj && obj->root)
-		{
-			try
-			{
-				return obj->root->skins.at(id).get();
-			}
-			catch (...)
-			{
-			}
+			if (id >= 0 && id < doc->root->skins.size())
+				return doc->root->skins[id].get();
 		}
 		return nullptr;
 	}
@@ -269,16 +275,16 @@ namespace glTF_2_0
 	/// note that names are optional and this might not work
 	///-----------------------------------------------------------------------
 
-	AccessorT const* get_Accessor(glTF_Object* const obj, const char* name)
+	AccessorT* const get_Accessor(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->accessors.begin(), obj->root->accessors.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->accessors.begin(), doc->root->accessors.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->accessors.end())
+			if (it != doc->root->accessors.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -286,16 +292,16 @@ namespace glTF_2_0
 
 	//---
 
-	AnimationT const* get_Animation(glTF_Object* const obj, const char* name)
+	AnimationT* const get_Animation(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->animations.begin(), obj->root->animations.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->animations.begin(), doc->root->animations.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->animations.end())
+			if (it != doc->root->animations.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -303,16 +309,16 @@ namespace glTF_2_0
 
 	//---
 
-	BufferT const* get_Buffer(glTF_Object* const obj, const char* name)
+	BufferT* const get_Buffer(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->buffers.begin(), obj->root->buffers.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->buffers.begin(), doc->root->buffers.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->buffers.end())
+			if (it != doc->root->buffers.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -320,16 +326,16 @@ namespace glTF_2_0
 
 	//---
 
-	BufferViewT const* get_BufferView(glTF_Object* const obj, const char* name)
+	BufferViewT* const get_BufferView(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->bufferviews.begin(), obj->root->bufferviews.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->bufferViews.begin(), doc->root->bufferViews.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->bufferviews.end())
+			if (it != doc->root->bufferViews.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -337,16 +343,16 @@ namespace glTF_2_0
 
 	//---
 
-	CameraT const* get_Camera(glTF_Object* const obj, const char* name)
+	CameraT* const get_Camera(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->cameras.begin(), obj->root->cameras.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->cameras.begin(), doc->root->cameras.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->cameras.end())
+			if (it != doc->root->cameras.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -354,16 +360,16 @@ namespace glTF_2_0
 
 	//---
 
-	ImageT const* get_Image(glTF_Object* const obj, const char* name)
+	ImageT* const get_Image(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->images.begin(), obj->root->images.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->images.begin(), doc->root->images.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->images.end())
+			if (it != doc->root->images.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -371,16 +377,16 @@ namespace glTF_2_0
 
 	//---
 
-	MaterialT const* get_Material(glTF_Object* const obj, const char* name)
+	MaterialT* const get_Material(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->materials.begin(), obj->root->materials.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->materials.begin(), doc->root->materials.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->materials.end())
+			if (it != doc->root->materials.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -388,16 +394,33 @@ namespace glTF_2_0
 
 	//---
 
-	MeshPrimitiveT const* get_MeshPrimitive(glTF_Object* const obj, const char* name)
+	// MeshPrimitiveT *const get_MeshPrimitive(const glTF_Document* const doc, const char* name)
+	//{
+	//	if (doc && doc->root)
+	//	{
+	//		auto it = std::find_if(doc->root->meshprimitives.begin(), doc->root->meshprimitives.end(), [&name](auto&
+	// elem) { 			return elem && elem->name == name;
+	//		});
+	//		if (it != doc->root->meshprimitives.end())
+	//		{
+	//			return it->get();
+	//		}
+	//	}
+	//	return nullptr;
+	//}
+
+	//---
+
+	MeshT* const get_Mesh(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->meshprimitives.begin(), obj->root->meshprimitives.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->meshes.begin(), doc->root->meshes.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->meshprimitives.end())
+			if (it != doc->root->meshes.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -405,16 +428,16 @@ namespace glTF_2_0
 
 	//---
 
-	MeshT const* get_Mesh(glTF_Object* const obj, const char* name)
+	NodeT* const get_Node(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->meshs.begin(), obj->root->meshs.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->nodes.begin(), doc->root->nodes.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->meshs.end())
+			if (it != doc->root->nodes.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -422,16 +445,16 @@ namespace glTF_2_0
 
 	//---
 
-	NodeT const* get_Node(glTF_Object* const obj, const char* name)
+	SceneT* const get_Scene(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->nodes.begin(), obj->root->nodes.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->scenes.begin(), doc->root->scenes.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->nodes.end())
+			if (it != doc->root->scenes.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -439,16 +462,16 @@ namespace glTF_2_0
 
 	//---
 
-	SceneT const* get_Scene(glTF_Object* const obj, const char* name)
+	SamplerT* const get_Sampler(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->scenes.begin(), obj->root->scenes.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->samplers.begin(), doc->root->samplers.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->scenes.end())
+			if (it != doc->root->samplers.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -456,16 +479,16 @@ namespace glTF_2_0
 
 	//---
 
-	SamplerT const* get_Sampler(glTF_Object* const obj, const char* name)
+	TextureT* const get_Texture(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->samplers.begin(), obj->root->samplers.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->textures.begin(), doc->root->textures.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->samplers.end())
+			if (it != doc->root->textures.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -473,16 +496,16 @@ namespace glTF_2_0
 
 	//---
 
-	TextureT const* get_Texture(glTF_Object* const obj, const char* name)
+	SkinT* const get_Skin(const glTF_Document* const doc, const char* name)
 	{
-		if (obj && obj->root)
+		if (doc && doc->root)
 		{
-			auto it = std::find_if(obj->root->textures.begin(), obj->root->textures.end(), [&name](auto& elem) {
+			auto it = std::find_if(doc->root->skins.begin(), doc->root->skins.end(), [&name](auto& elem) {
 				return elem && elem->name == name;
 			});
-			if (it != obj->root->textures.end())
+			if (it != doc->root->skins.end())
 			{
-				return &*it;
+				return it->get();
 			}
 		}
 		return nullptr;
@@ -490,23 +513,64 @@ namespace glTF_2_0
 
 	//---
 
-	SkinT const* get_Skin(glTF_Object* const obj, const char* name)
+	///-----------------------------------------------------------------------
+	/// set-transform for nodes
+	///-----------------------------------------------------------------------
+
+	void set_NodeMatrix(NodeT* const node, const mat4_t& m)
 	{
-		if (obj && obj->root)
+		if (node)
 		{
-			auto it = std::find_if(obj->root->skins.begin(), obj->root->skins.end(), [&name](auto& elem) {
-				return elem && elem->name == name;
-			});
-			if (it != obj->root->skins.end())
-			{
-				return &*it;
-			}
+			auto msize = m.length() * mat4_t::col_type::length();
+			node->matrix.reserve(msize);
+			std::copy_n(&m[0][0], msize, std::back_inserter(node->matrix));
+
+			node->rotation.clear();
+			node->scale.clear();
+			node->translation.clear();
 		}
-		return nullptr;
 	}
 
 	//---
 
+	void set_NodeRotation(NodeT* const node, const quat_t& q)
+	{
+		if (node)
+		{
+			node->rotation.reserve(q.length());
+			std::copy_n(&q.x, q.length(), std::back_inserter(node->rotation));
+
+			node->matrix.clear();
+		}
+	}
+
+	//---
+
+	void set_NodeScale(NodeT* const node, const vec3_t& v)
+	{
+		if (node)
+		{
+			node->scale.reserve(v.length());
+			std::copy_n(&v.x, v.length(), std::back_inserter(node->scale));
+
+			node->matrix.clear();
+		}
+	}
+
+	//---
+
+	void set_NodeTranslation(NodeT* const node, const vec3_t& v)
+	{
+		if (node)
+		{
+			node->translation.reserve(v.length());
+			std::copy_n(&v.x, v.length(), std::back_inserter(node->translation));
+
+			node->matrix.clear();
+		}
+	}
+
+	//---
 
 	//-------------------------------------------------------------------------
 	//-------------------------------------------------------------------------

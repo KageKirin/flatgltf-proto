@@ -5,8 +5,6 @@
 
 namespace glTF_2_0
 {
-	using namespace detail;
-
 	///-----------------------------------------------------------------------
 	/// utility
 	///-----------------------------------------------------------------------
@@ -15,7 +13,7 @@ namespace glTF_2_0
 	//- changes URIs
 	//- merges all mapped bindata into a single blob
 	//- changes bufferViews accordingly
-	bool binarize_glTFData(glTF_Object* obj)
+	bool binarize_Document(glTF_Document* const doc)
 	{
 	}
 
@@ -24,7 +22,7 @@ namespace glTF_2_0
 	/// prepares glTF data for glTF-embedded format
 	//- changes URIs to contain base64 encoded buffers
 	//- changes bufferViews accordingly
-	bool embed_glTFData(glTF_Object* obj)
+	bool embed_Document(glTF_Document* const doc)
 	{
 	}
 
@@ -33,7 +31,7 @@ namespace glTF_2_0
 	/// prepares glTF data for glTF-multi format
 	//- changes URIs to reference external buffers
 	//- changes bufferViews accordingly
-	bool dislodge_glTFData(glTF_Object* obj)
+	bool dislodge_Document(glTF_Document* const doc)
 	{
 	}
 
@@ -42,7 +40,7 @@ namespace glTF_2_0
 	/// prepares glTF data for glTF-multi format
 	//- splits buffers into multiple buffers according to bufferViews
 	//- changes bufferViews accordingly
-	bool split_glTFData(glTF_Object* obj)
+	bool split_Document(glTF_Document* const doc)
 	{
 	}
 

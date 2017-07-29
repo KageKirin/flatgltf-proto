@@ -57,15 +57,15 @@ int main(int argc, char** argv)
 
 		std::cout << "----------------------" << std::endl;
 		auto iss	= std::istringstream(gltfFileContents);
-		bool loadOk = glTF_2_0::load_glTFData(doc.get(), iss);
+		bool loadOk = glTF_2_0::load_Document(doc.get(), iss);
 		if (!loadOk)
 		{
 			std::cerr << "loading failed" << std::endl;
 		}
 
 		std::cout << "----------------------" << std::endl;
-		auto oss	= std::ostringstream;
-		bool saveOk = glTF_2_0::save_glTFData(doc.get(), oss);
+		auto oss	= std::ostringstream();
+		bool saveOk = glTF_2_0::save_Document(doc.get(), oss);
 		std::cout << oss.str() << std::endl;
 		if (!saveOk)
 		{

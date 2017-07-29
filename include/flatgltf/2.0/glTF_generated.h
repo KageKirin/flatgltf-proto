@@ -142,27 +142,34 @@ namespace glTF_2_0
 	/// "description": "Specifies if the attribute is a scalar, vector, or matrix."
 	enum class AccessorType : int16_t
 	{
-		SCALAR = 0,
-		VEC2   = 1,
-		VEC3   = 2,
-		VEC4   = 3,
-		MAT2   = 4,
-		MAT3   = 5,
-		MAT4   = 6,
-		MIN	= SCALAR,
-		MAX	= MAT4
+		SCALAR  = 0,
+		VEC2	= 1,
+		VEC3	= 2,
+		VEC4	= 3,
+		MAT2	= 4,
+		MAT3	= 5,
+		MAT4	= 6,
+		__UNSET = 7,
+		MIN		= SCALAR,
+		MAX		= __UNSET
 	};
 
-	inline AccessorType (&EnumValuesAccessorType())[7]
+	inline AccessorType (&EnumValuesAccessorType())[8]
 	{
-		static AccessorType values[]
-		  = {AccessorType::SCALAR, AccessorType::VEC2, AccessorType::VEC3, AccessorType::VEC4, AccessorType::MAT2, AccessorType::MAT3, AccessorType::MAT4};
+		static AccessorType values[] = {AccessorType::SCALAR,
+										AccessorType::VEC2,
+										AccessorType::VEC3,
+										AccessorType::VEC4,
+										AccessorType::MAT2,
+										AccessorType::MAT3,
+										AccessorType::MAT4,
+										AccessorType::__UNSET};
 		return values;
 	}
 
 	inline const char** EnumNamesAccessorType()
 	{
-		static const char* names[] = {"SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4", nullptr};
+		static const char* names[] = {"SCALAR", "VEC2", "VEC3", "VEC4", "MAT2", "MAT3", "MAT4", "__UNSET", nullptr};
 		return names;
 	}
 
@@ -1008,7 +1015,7 @@ namespace glTF_2_0
 		std::vector<uint8_t>						  extensions;
 		std::vector<uint8_t>						  extras;
 		AccessorT()
-			: bufferView(-1), byteOffset(0), componentType(-1), normalized(false), count(1), type(AccessorType::SCALAR)
+			: bufferView(-1), byteOffset(0), componentType(-1), normalized(false), count(1), type(AccessorType::__UNSET)
 		{
 		}
 	};
@@ -1102,11 +1109,11 @@ namespace glTF_2_0
 		/// "description": "Specifies if the attribute is a scalar, vector, or matrix."
 		AccessorType type() const
 		{
-			return static_cast<AccessorType>(GetField<int16_t>(VT_TYPE, 0));
+			return static_cast<AccessorType>(GetField<int16_t>(VT_TYPE, 7));
 		}
 		bool mutate_type(AccessorType _type)
 		{
-			return SetField<int16_t>(VT_TYPE, static_cast<int16_t>(_type), 0);
+			return SetField<int16_t>(VT_TYPE, static_cast<int16_t>(_type), 7);
 		}
 		///  "description": "Maximum value of each component in this attribute."
 		/// "minItems": 1,
@@ -1236,7 +1243,7 @@ namespace glTF_2_0
 		}
 		void add_type(AccessorType type)
 		{
-			fbb_.AddElement<int16_t>(Accessor::VT_TYPE, static_cast<int16_t>(type), 0);
+			fbb_.AddElement<int16_t>(Accessor::VT_TYPE, static_cast<int16_t>(type), 7);
 		}
 		void add_max(flatbuffers::Offset<flatbuffers::Vector<float>> max)
 		{
@@ -1281,7 +1288,7 @@ namespace glTF_2_0
 														int32_t							componentType = -1,
 														bool							normalized	= false,
 														int32_t							count		  = 1,
-														AccessorType					type = AccessorType::SCALAR,
+														AccessorType					type = AccessorType::__UNSET,
 														flatbuffers::Offset<flatbuffers::Vector<float>> max = 0,
 														flatbuffers::Offset<flatbuffers::Vector<float>> min = 0,
 														flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AccessorSparse>>> sparse
@@ -1312,7 +1319,7 @@ namespace glTF_2_0
 															  int32_t						  componentType = -1,
 															  bool							  normalized	= false,
 															  int32_t						  count			= 1,
-															  AccessorType				type = AccessorType::SCALAR,
+															  AccessorType				type = AccessorType::__UNSET,
 															  const std::vector<float>* max  = nullptr,
 															  const std::vector<float>* min  = nullptr,
 															  const std::vector<flatbuffers::Offset<AccessorSparse>>* sparse = nullptr,

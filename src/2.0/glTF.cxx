@@ -15,12 +15,12 @@ namespace glTF_2_0;
 /// gltf_detailedDescription: The datatype of components in the attribute.  All valid values correspond to WebGL enums.  The corresponding typed arrays are `Int8Array`, `Uint8Array`, `Int16Array`, `Uint16Array`, `Uint32Array`, and `Float32Array`, respectively.  5125 (UNSIGNED_INT) is only allowed when the accessor contains indices, i.e., the accessor is only referenced by `primitive.indices`.
 /// gltf_webgl: `vertexAttribPointer()` type parameter
 enum ComponentType: int { //TODO: promote to top
-		BYTE = 5120,
-		UNSIGNED_BYTE = 5121,
-		SHORT = 5122,
-		UNSIGNED_SHORT = 5123,
-		UNSIGNED_INT = 5125,
-		FLOAT = 5126,
+	BYTE = 5120,
+	UNSIGNED_BYTE = 5121,
+	SHORT = 5122,
+	UNSIGNED_SHORT = 5123,
+	UNSIGNED_INT = 5125,
+	FLOAT = 5126,
 }
 
 /// "description": "Specifies if the attribute is a scalar, vector, or matrix."
@@ -32,6 +32,7 @@ enum AccessorType: short { //string
 	MAT2,
 	MAT3,
 	MAT4,
+	__UNSET,
 }
 
 ///-- accessor.sparse.indices.schema.json
@@ -42,7 +43,7 @@ table AccessorSparseIndices {
 	/// "description": "The offset relative to the start of the bufferView in bytes. Must be aligned."
 	byeOffset: int  = 0; //uint
 
-	componentType: int = -1;	//ComponentType = BYTE;
+	componentType: int = -1;	//ComponentType = UNSIGNED_BYTE;
 
 	///-- glTFProperty
 	/// Dictionary object with extension-specific objects.
@@ -59,9 +60,9 @@ table AccessorSparseValues {
 	/// "description": "The index of the bufferView with sparse values. Referenced bufferView can't have ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER target."
 	bufferView: int = -1; //glTFid
 
-	/// "description": "The offset relative to the start of the bufferView in bytes. Must be aligned."
-	byte)") +
-std::string(R"(Offset: int = 0; //uint
+	/// "description": "The offset relative to the start of the bufferView in bytes. Must be al)") +
+std::string(R"(igned."
+	byteOffset: int = 0; //uint
 
 	///-- glTFProperty
 	/// Dictionary object with extension-specific objects.
@@ -107,8 +108,8 @@ table Accessor
 	bufferView: int = -1; //glTFid
 	
 	/// "description": "The offset relative to the start of the bufferView in bytes."
-	/// "gltf_detailedDescription": "The offset relative to the start of the bufferView in bytes.  This must be)") +
-std::string(R"( a multiple of the size of the component datatype."
+	/// "gltf_detailedDescription": "The offset relative to the start of the bufferView in bytes. )") +
+std::string(R"( This must be a multiple of the size of the component datatype."
 	/// "gltf_webgl": "`vertexAttribPointer()` offset parameter"
 	byteOffset: int = 0; //uint
 
@@ -127,13 +128,13 @@ std::string(R"( a multiple of the size of the component datatype."
 	count: int = 1; //uint 
 
 	/// "description": "Specifies if the attribute is a scalar, vector, or matrix."
-	type: AccessorType;
+	type: AccessorType = __UNSET;
 	
 	///  "description": "Maximum value of each component in this attribute."
 	/// "minItems": 1,
 	/// "maxItems": 16,
-	/// "gltf_detailedDescription": "Maximum value of each component in this attribute.  Array elements must be treated as having the same data type as accessor's `componentType`. Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized`)") +
-std::string(R"( property has no effect on array values: they always correspond to the actual values stored in the buffer. When accessor is sparse, this property must contain max values of accessor data with sparse substitution applied."
+	/// "gltf_detailedDescription": "Maximum value of each component in this attribute.  Array elements must be treated as having the same data type as accessor's `componentType`. Both min and max arrays have the same length.  The length is determined by the value of the type property; it can be 1, 2, 3, 4, 9,)") +
+std::string(R"( or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When accessor is sparse, this property must contain max values of accessor data with sparse substitution applied."
 	max: [float]; // Number
 
 	/// "description": "Minimum value of each component in this attribute."
@@ -174,9 +175,9 @@ table Asset
 	/// Tool that generated this glTF model.  Useful for debugging.
 	generator: string;
 
-	/// The glTF version that this asset targets.
-	/// pattern: )") +
-std::string(R"("^[0-9]+\\.[0-9]+$"
+	/// The glTF version that this asset )") +
+std::string(R"(targets.
+	/// pattern: "^[0-9]+\\.[0-9]+$"
 	version: string(required);
 
 	/// The minimum glTF version that this asset targets.
@@ -235,8 +236,8 @@ table AnimationChannelTarget {
 /// "description": "Targets an animation's sampler at a node's property."
 table AnimationChannel {
 	/// "description": "The index of a sampler in this animation used to compute the value for the target."
-	/// "gltf_detailedDescription": "The index of a sampler in this a)") +
-std::string(R"(nimation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS)."
+	/// "gltf_detailedDescription": "The index)") +
+std::string(R"( of a sampler in this animation used to compute the value for the target, e.g., a node's translation, rotation, or scale (TRS)."
 	sampler: int = -1; //glTFid
 
 	/// "description": "The index of the node and TRS property to target."
@@ -268,8 +269,8 @@ enum AnimationSamplerInterpolationAlgorithm: short { // string
 }
 
 /// Animation Sampler
-/// "description": "Combines input and output accessors with an interpolation algorithm to defin)") +
-std::string(R"(e a keyframe graph (but not its target)."
+/// "description": "Combines input and output accessors with an interpola)") +
+std::string(R"(tion algorithm to define a keyframe graph (but not its target)."
 table AnimationSampler {
 	/// "description": "The index of an accessor containing keyframe input values, e.g., time."
 	/// "gltf_detailedDescription": "The index of an accessor containing keyframe input values, e.g., time. That accessor must have componentType `FLOAT`. The values represent time in seconds with `time[0] >= 0.0`, and strictly increasing values, i.e., `time[n + 1] > time[n]`."
@@ -306,8 +307,8 @@ table Animation {
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.
-	/// gltf_detailedDescription: The user-defined )") +
-std::string(R"(name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
+	/// gltf_detailedDescrip)") +
+std::string(R"(tion: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
 	name: string;
 
 	///-- glTFProperty
@@ -334,7 +335,7 @@ table Buffer {
 	uri: string;
 
 	/// "description": "The length of the buffer in bytes."
-	byteLength: int; //uint
+	byteLength: int = 0; //uint
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.
@@ -365,9 +366,9 @@ enum BufferViewTarget: int {
 
 /// Buffer View
 /// "description": "A view into a buffer generally representing a subset of the buffer."
-table BufferView {
-	/// "description)") +
-std::string(R"(": "The index of the buffer."
+table Buf)") +
+std::string(R"(ferView {
+	/// "description": "The index of the buffer."
 	buffer: int = -1; //glTFid
 
 	/// "description": "The offset into the buffer in bytes."
@@ -417,8 +418,8 @@ table CameraOrthographic {
 	/// "description": "The floating-point vertical magnification of the view. Must not be zero."
     ymag: float; // Number
 
-	/// "description": "The floating-point distance to the far clipping plane. `zfar` must be greater than `)") +
-std::string(R"(znear`."
+	/// "description": "The floating-point distance to the far clipping plane. `z)") +
+std::string(R"(far` must be greater than `znear`."
     zfar: float; // Number
 
 	/// "description": "The floating-point distance to the near clipping plane."
@@ -466,9 +467,9 @@ table CameraPerspective {
 ///-- camera.schema.json
 /// "description": "Specifies if the camera uses a perspective or orthographic projection."
 /// "gltf_detailedDescription": "Specifies if the camera uses a perspective or orthographic projection.  Based on this, either the camera's `perspective` or `orthographic` property will be defined."
-enum CameraType: short {//string
-	p)") +
-std::string(R"(erspective,
+enum Cam)") +
+std::string(R"(eraType: short {//string
+	perspective,
 	orthographic,
 }
 
@@ -512,9 +513,9 @@ table Image {
 	uri: string;
 
 	/// "description": "The image's MIME type."
-	/// NOTE: JsonSchema states enum { "image/jpeg" "image/png" }, but this type of variables are not possible with flatbuffers, hence keeping the mimeType as string
-	mimeType:)") +
-std::string(R"( string;
+	/// NOTE: JsonSchema states enum { "image/jpeg" "image/png" }, but this type of variables are not possible with flatbuffers, hence keeping the mi)") +
+std::string(R"(meType as string
+	mimeType: string;
 
 	/// "description": "The index of the bufferView that contains the image. Use this instead of the image's uri property."
 	bufferView: int = -1; //glTFid
@@ -564,8 +565,8 @@ table TextureInfo {
 /// Material Normal Texture Info
 table MaterialNormalTextureInfo {
     /// "description": "The scalar multiplier applied to each normal vector of the normal texture."
-	/// "gltf_detailedDescription": "The scalar multiplier applied to each normal vector of the texture. This value scales the normal vector using the formula: `scaledN)") +
-std::string(R"(ormal =  normalize((normalize(<sampled normal texture value>) * 2.0 - 1.0) * vec3(<normal scale>, <normal scale>, 1.0))`. This value is ignored if normalTexture is not specified. This value is linear."
+	/// "gltf_detailedDescription": "The scalar multiplier applied to each normal vector of the texture. This value scales the normal vector )") +
+std::string(R"(using the formula: `scaledNormal =  normalize((normalize(<sampled normal texture value>) * 2.0 - 1.0) * vec3(<normal scale>, <normal scale>, 1.0))`. This value is ignored if normalTexture is not specified. This value is linear."
 	scale: float = 1.0; // Number
 
 	///-- TextureInfo
@@ -599,8 +600,8 @@ table MaterialOcclusionTextureInfo {
 	index: int = -1; //glTFId
 
 	/// "description": "The set index of texture's TEXCOORD attribute used for texture coordinate mapping."
-	/// "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of 0 corresponds to TEXCOORD_0)") +
-std::string(R"()."
+	/// "gltf_detailedDescription": "This integer value is used to construct a string in the format TEXCOORD_<set index> which is a reference to a key in mesh.primitives.attributes (e.g. A value of )") +
+std::string(R"(0 corresponds to TEXCOORD_0)."
 	texCoord: int; //uint
 
 	///-- glTFProperty
@@ -630,9 +631,9 @@ table MaterialPbrMetallicRoughness {
 	baseColorTexture: TextureInfo;
 	
 	/// "description": "The metalness of the material."
-	/// "gltf_detailedDescription": "The metalness of the material. A value of 1.0 means the material is a metal. A value of 0.0 means the material is a dielectric. Values in between are for blending between metals and dielectrics such as dirty metallic surfaces. This value is linear. If a metallicRoughnessTexture is specified, this value is multiplied with the metallic texel values."
-	// "minimum": )") +
-std::string(R"(0.0
+	/// "gltf_detailedDescription": "The metalness of the material. A value of 1.0 means the material is a metal. A value of 0.0 means the material is a dielectric. Values in between are for blending between metals and dielectrics such as dirty metallic surfaces. This value is linear. If a metallicRoughnessTexture is specified, this value is multiplied with the metallic tex)") +
+std::string(R"(el values."
+	// "minimum": 0.0
 	// "maximum": 1.0
 	// "default": 1.0
 	metallicFactor: float = 1.0; // Number
@@ -673,9 +674,9 @@ enum MaterialAlphaMode: short {
 }
 
 /// Material
-/// "description": "The material appearance of a primitive."
-table)") +
-std::string(R"( Material {
+/// "description": "The material appear)") +
+std::string(R"(ance of a primitive."
+table Material {
 	/// "description": "A set of parameter values that are used to define the metallic-roughness material model from Physically-Based Rendering (PBR) methodology. When not specified, all the default values of `pbrMetallicRoughness` apply."
 	pbrMetallicRoughness: MaterialPbrMetallicRoughness;
 
@@ -695,9 +696,9 @@ std::string(R"( Material {
 	/// "gltf_detailedDescription": "The RGB components of the emissive color of the material. These values are linear. If an emissiveTexture is specified, this value is multiplied with the texel values."
 	/// "minItems": 3,
 	/// "maxItems": 3,
-	/// "default": [ 0.0, 0.0, 0.0 ],
-	emi)") +
-std::string(R"(ssiveFactor: [float]; // Number
+	/// "defaul)") +
+std::string(R"(t": [ 0.0, 0.0, 0.0 ],
+	emissiveFactor: [float]; // Number
 	
 	/// "description": "The alpha rendering mode of the material."
 	/// "gltf_detailedDescription": "The material's alpha rendering mode enumeration specifying the interpretation of the alpha value of the main factor and texture."
@@ -740,9 +741,9 @@ enum MeshPrimitiveMode: ubyte {
 	TRIANGLE_FAN = 6,
 }
 
-table MeshPrimitiveAttribute {
-	id: string(k)") +
-std::string(R"(ey);
+table MeshPrimiti)") +
+std::string(R"(veAttribute {
+	id: string(key);
 	value: int = -1; //glTFid
 }
 
@@ -766,8 +767,8 @@ table MeshPrimitive {
 	mode: MeshPrimitiveMode = TRIANGLES;
 
 	/// "description": "An array of Morph Targets, each  Morph Target is a dictionary mapping attributes (only `POSITION`, `NORMAL`, and `TANGENT` supported) to their deviations in the Morph Target."
-	/// "description": "A dictionary object specifying attributes displacements in a Morph Target, where each key corresponds to one of the three supported attribute semantic (`POSITION`, `NORMAL`, or `TANGENT`) and each value is the index of the accessor containing the attribute displace)") +
-std::string(R"(ments' data."
+	/// "description": "A dictionary object specifying attributes displacements in a Morph Target, where each key corresponds to one of the three supported attribute semantic (`POSITION`, `NORMAL`, or `TANGENT`) and each value is the index of the accessor contai)") +
+std::string(R"(ning the attribute displacements' data."
 	targets: [ubyte](flexbuffer);
 
 	///-- glTFProperty
@@ -810,8 +811,8 @@ table Mesh {
 
 ///-- node.schema.json
 /// Node
-/// "description": "A node in the node hierarchy.  When the node contains `skin`, all `mesh.primitives` must contain `JOINTS_0` and `WEIGHTS_0` attributes.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS properties may be present; `matrix)") +
-std::string(R"(` will not be present."
+/// "description": "A node in the node hierarchy.  When the node contains `skin`, all `mesh.primitives` must contain `JOINTS_0` and `WEIGHTS_0` attributes.  A node can have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), only TRS propert)") +
+std::string(R"(ies may be present; `matrix` will not be present."
 table Node {
 	/// "description": "The index of the camera referenced by this node."
 	camera: int = -1; //glTFid
@@ -864,10 +865,10 @@ table Node {
 
 	///-- glTFProperty
 	/// Dictionary object with extension-specific objects.
-	extensions: [ubyte](flexbuffer);
+	extensions: [ubyte](fle)") +
+std::string(R"(xbuffer);
 
-	/// Application)") +
-std::string(R"(-specific data.
+	/// Application-specific data.
 	extras: [ubyte](flexbuffer);
 	///-- glTFProperty --/
 	///-- glTFChildOfRootProperty --/
@@ -929,8 +930,8 @@ table Sampler {
 	magFilter: SamplerFilter = NEAREST;
 
 	/// "description": "Minification filter."
-	/// "gltf_detailedDescription": "Minification filter.  All valid v)") +
-std::string(R"(alues correspond to WebGL enums."
+	/// "gltf_detailedDescription": "Minifi)") +
+std::string(R"(cation filter.  All valid values correspond to WebGL enums."
 	/// "gltf_webgl": "`texParameterf()` with pname equal to TEXTURE_MIN_FILTER"
 	minFilter: SamplerFilter = NEAREST;
 
@@ -976,8 +977,8 @@ table Texture {
 
 	///-- glTFChildOfRootProperty
 	/// The user-defined name of this object.
-	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same nam)") +
-std::string(R"(e.
+	/// gltf_detailedDescription: The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors c)") +
+std::string(R"(ould even have the same name.
 	name: string;
 
 	///-- glTFProperty
@@ -1030,10 +1031,10 @@ table Skin {
 /// The root object for a glTF asset.
 table Root {
 	/// Names of glTF extensions used somewhere in this asset.
-	extensionsUsed: [string];
+	extensionsUsed: [string];)") +
+std::string(R"(
    
-	/// Names of glTF ext)") +
-std::string(R"(ensions required to properly load this asset.
+	/// Names of glTF extensions required to properly load this asset.
 	extensionsRequired: [string];
 
 	/// An array of accessors.
@@ -1099,10 +1100,10 @@ std::string(R"(ensions required to properly load this asset.
 	///-- glTFProperty --/
 
 }
-///-- glTF.schema.json --/
+///)") +
+std::string(R"(-- glTF.schema.json --/
 
-ro)") +
-std::string(R"(ot_type Root;
+root_type Root;
 
 ///----------------------------------------------------------------------------
 

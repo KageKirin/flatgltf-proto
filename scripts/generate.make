@@ -30,8 +30,7 @@ gen_flatgltf_1_0_headers:
 gen_flatgltf_2_0_headers:
 	@$(PROJECT_SCAFFOLDING)/tools/bin/darwin/flatc \
 		$(FLATGLTF_2_0_FLATC_CPP_FLAGS) \
-		$(PROJECT_SCAFFOLDING)/thirdparty/flatgltf/schemas/2.0/glTF.fbs \
-		$(PROJECT_SCAFFOLDING)/thirdparty/flatgltf/schemas/2.0/glb.fbs
+		$(PROJECT_SCAFFOLDING)/thirdparty/flatgltf/schemas/2.0/glTF.fbs
 	@clang-format -i $(PROJECT_SCAFFOLDING)/thirdparty/flatgltf/include/flatgltf/2.0/*_generated.h
 
 gen_flatgltf_1_0_schema_headers:
